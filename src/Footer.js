@@ -10,13 +10,13 @@ export const Footer = props => {
     return (
         <div className={styles.footer} style={{backgroundColor: palette.neutralLighter}}>
             <div className={styles.centerBox}>
-                <div className={styles.info}>
+                <div className={styles.column}>
                     <h3>{strings.appName}</h3>
                     <p>
-                        Copyright &copy; {new Date().getFullYear()} MedicalNet. All rights reserved.
+                        Copyright &copy; {new Date().getFullYear()} {strings.appName}. All rights reserved.
                     </p>
                 </div>
-                <div className={styles.contact}>
+                <div className={styles.column}>
                     <h5 style={{marginBottom: 5}}>Contact</h5>
                     <p style={{fontSize: "small"}}>
                         Email: <Link href={'mailto:' + strings.mail}>{strings.mail}</Link>

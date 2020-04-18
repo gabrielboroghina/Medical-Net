@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './App.css';
+import style from './style.module.scss';
 
 import {
     Stack,
@@ -58,7 +59,10 @@ const Navbar = props => {
 
     return (
         <div className="navbar" style={{boxShadow: Depths.depth4}}>
-            <Stack className="navbar-stack" horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+            <div className={style.logo}>
+                <img src={require('./res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
+            </div>
+            <Stack className="navbar-stack" horizontal horizontalAlign="end">
                 <CommandBarButton className="persona-btn" menuProps={menuProps}>
                     <Persona
                         {...persona}

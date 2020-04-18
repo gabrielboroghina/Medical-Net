@@ -5,6 +5,7 @@ import {createTheme, Customizations} from "office-ui-fabric-react";
 import Navbar from "./Navbar";
 import CardGrid from "./doctors";
 import {Footer} from "./Footer";
+import {GDPRModal} from "./gdprModal";
 
 const myTheme = createTheme({
     palette: {
@@ -45,6 +46,7 @@ class App extends React.Component {
                     <CardGrid/>
                 </div>
                 <Footer/>
+                <GDPRModal/>
             </>
         );
     }
