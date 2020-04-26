@@ -37,6 +37,7 @@
   "devDependencies": {
     "@uifabric/example-data": "^7.0.6",
     "@uifabric/fluent-theme": "^7.1.51",
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "react-router-dom": "^5.1.2"
   }
 }

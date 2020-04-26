@@ -1,13 +1,16 @@
 import React from 'react';
 import './App.css';
-import RegisterPanel from "./register";
-import {createTheme, Customizations} from "office-ui-fabric-react";
-import Navbar from "./Navbar";
-import CardGrid from "./doctors";
-import {Footer} from "./Footer";
-import {GDPRModal} from "./gdprModal";
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import RegisterPanel from "./views/register";
+import {createTheme, loadTheme} from "office-ui-fabric-react";
+import Navbar from "./views/Navbar";
+import CardGrid from "./views/doctors";
+import {Footer} from "./views/Footer";
+import {GDPRModal} from "./views/gdprModal";
+import LoginPanel from "./views/login";
 
-const myTheme = createTheme({
+
+const customTheme = createTheme({
     palette: {
         themePrimary: '#780b1c',
         themeLighterAlt: '#faf1f2',
@@ -33,17 +36,21 @@ const myTheme = createTheme({
         white: '#ffffff',
     }
 });
-
+loadTheme(customTheme);
 
 class App extends React.Component {
     render() {
-        Customizations.applySettings({theme: myTheme});
-
         return (
             <>
                 <Navbar/>
                 <div className="main">
-                    <CardGrid/>
+                    <BrowserRouter basename="/">
+                        <Switch>
+                            <Route path="/login" component={LoginPanel}/>
+                            <Route path="/register" component={RegisterPanel}/>
+                            <Route path="/doctors" component={CardGrid}/>
+                        </Switch>
+                    </BrowserRouter>
                 </div>
                 <Footer/>
                 <GDPRModal/>

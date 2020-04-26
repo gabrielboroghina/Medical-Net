@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
-import './App.css';
+import '../App.css';
+import {Link} from 'react-router-dom';
 
 import {
     Text,
     DefaultButton, PrimaryButton,
     Stack,
     TextField,
-    Link
+    getTheme,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
+
 function RegisterPanel() {
+    const {palette} = getTheme();
     const [state, setState] = useState({passErr: ""});
 
     const validatePassword = password => {
@@ -44,25 +47,34 @@ function RegisterPanel() {
     };
 
     return (
-        <div className="login-panel" style={{boxShadow: Depths.depth4}}>
-            <Stack tokens={{childrenGap: 20}}>
+        <div className="login"
+             style={{
+                 boxShadow: Depths.depth4
+             }}>
+            <Stack className="slide" tokens={{childrenGap: 20}}>
                 <h2>Register</h2>
                 <Text variant={'smallPlus'} block>
                     Create an account to be able to use the platform
                 </Text>
 
-                <TextField id="field-user" label="Username:" underlined required/>
-                <TextField id="field_name" label="Name:" underlined required/>
-                <TextField id="field-email" label="Email:" underlined required/>
-                <TextField id="field-pass" label="Password:" type="password" errorMessage={state.passErr} underlined
-                           required/>
+                <form>
+                    <Stack tokens={{childrenGap: 20}}>
+                        <TextField id="field-user" label="Username:" underlined required autoComplete="username"/>
+                        <TextField id="field_name" label="Name:" underlined required autoComplete="name"/>
+                        <TextField id="field-email" label="Email:" underlined required autocomplete="email"/>
+                        <TextField id="field-pass" label="Password:" type="password" autoComplete="current-password"
+                                   errorMessage={state.passErr} underlined required/>
 
-                <Link className="small-link" href="">Already have an account? Log In</Link>
+                        <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
+                            Already have an account? Log In
+                        </Link>
 
-                <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
-                    <DefaultButton text="Back" allowDisabledFocus/>
-                    <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
-                </Stack>
+                        <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+                            <DefaultButton text="Back" allowDisabledFocus/>
+                            <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
+                        </Stack>
+                    </Stack>
+                </form>
             </Stack>
         </div>
     );

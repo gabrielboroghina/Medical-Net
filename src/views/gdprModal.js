@@ -5,8 +5,9 @@ import {
 } from "office-ui-fabric-react";
 import {useState} from "react";
 
-export const GDPRModal = () => {
-    const [hidden, setHidden] = useState(false);
+
+export const GDPRModal = props => {
+    const [hidden, setHidden] = useState(!props.show || true);
 
     const getAcceptedCookies = () => {
 

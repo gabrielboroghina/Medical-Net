@@ -1,12 +1,13 @@
 import * as React from 'react';
-import styles from './style.module.scss';
+import styles from '../style.module.scss';
 import {getTheme} from "office-ui-fabric-react/lib/Styling";
-import {strings} from './strings';
+import {strings} from '../strings';
 import {Link} from "office-ui-fabric-react";
 
-const {palette} = getTheme();
 
 export const Footer = props => {
+    const {palette} = getTheme();
+
     return (
         <div className={styles.footer} style={{backgroundColor: palette.neutralLighter}}>
             <div className={styles.centerBox}>

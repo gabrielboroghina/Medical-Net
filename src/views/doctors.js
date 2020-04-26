@@ -1,5 +1,5 @@
 import * as React from 'react';
-import style from './style.module.scss';
+import style from '../style.module.scss';
 
 import {
     DocumentCard,
@@ -8,14 +8,11 @@ import {
     DocumentCardImage,
 } from 'office-ui-fabric-react/lib/DocumentCard';
 
-import {CommandBar, ImageFit, Rating} from "office-ui-fabric-react";
+import {CommandBar, ImageFit, Rating, getTheme, List} from "office-ui-fabric-react";
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
-import {getTheme} from 'office-ui-fabric-react/lib/Styling';
-import {List} from "office-ui-fabric-react/lib/List";
-import {IRectangle} from "office-ui-fabric-react/lib/Utilities";
+
 
 const {palette} = getTheme();
-
 const overflowProps = {ariaLabel: 'More commands'};
 
 const _items = [
@@ -30,7 +27,6 @@ const _items = [
                     key: 'emailMessage',
                     text: 'Email message',
                     iconProps: {iconName: 'Mail'},
-                    ['data-automation-id']: 'newEmailButton', // optional
                 },
                 {
                     key: 'calendarEvent',
@@ -126,7 +122,7 @@ class ListGridExample extends React.Component {
         this._items = props.items;
     }
 
-    _getItemCountForPage = (itemIndex: number, surfaceRect: IRectangle) => {
+    _getItemCountForPage = (itemIndex, surfaceRect) => {
         if (itemIndex === 0) {
             this._columnCount = Math.ceil(surfaceRect.width / MAX_ROW_HEIGHT);
             this._columnWidth = Math.floor(surfaceRect.width / this._columnCount);
