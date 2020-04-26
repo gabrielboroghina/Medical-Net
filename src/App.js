@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
-import RegisterPanel from "./views/register";
+import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
 import Navbar from "./views/Navbar";
 import CardGrid from "./views/doctors";
@@ -47,8 +47,9 @@ class App extends React.Component {
                     <BrowserRouter basename="/">
                         <Switch>
                             <Route path="/login" component={LoginPanel}/>
-                            <Route path="/register" component={RegisterPanel}/>
+                            <Route path="/register" component={RegisterBox}/>
                             <Route path="/doctors" component={CardGrid}/>
+                            <Route path="/emailconfirmed" component={EmailConfirm}/>
                         </Switch>
                     </BrowserRouter>
                 </div>

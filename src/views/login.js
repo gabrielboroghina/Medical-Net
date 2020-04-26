@@ -20,13 +20,13 @@ const LoginPanel = props => {
     };
 
     return (
-        <div className="login" style={{boxShadow: Depths.depth4}}>
+        <div className="box" style={{boxShadow: Depths.depth4}}>
             <Stack className="slide" tokens={{childrenGap: 20}}>
                 <h2>Sign In</h2>
                 <form>
                     <Stack tokens={{childrenGap: 20}}>
                         <TextField label="Username:" underlined autoComplete="username"/>
-                        <TextField label="Password:" underlined autoComplete="current-password"/>
+                        <TextField label="Password:" type="password" underlined autoComplete="current-password"/>
                         <Link className="small-link" to="/register" style={{color: palette.themePrimary}}>
                             Don't have an account?
                         </Link>

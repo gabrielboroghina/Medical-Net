@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import '../App.css';
 import {Link} from 'react-router-dom';
+import bridge from '../bridge'
 
 import {
     Text,
@@ -12,15 +13,50 @@ import {
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
 
-function RegisterPanel() {
+const RegistrationStates = Object.freeze({
+    DATA_FORM: 0,
+    EMAIL_CONFIRM: 1,
+});
+
+const ValidateEmailBox = () => {
+    return (
+        <>
+            <h2>Email verification</h2>
+            <Text variant={'medium'} block>
+                We've sent you a verification email. Please confirm it to finalize your registration.
+            </Text>
+        </>
+    );
+};
+
+const EmailConfirm = () => {
     const {palette} = getTheme();
-    const [state, setState] = useState({passErr: ""});
+
+    return (
+        <div className="box"
+             style={{boxShadow: Depths.depth4}}>
+            <Stack className="slide" tokens={{childrenGap: 20}}>
+                <h2>Email confirmed</h2>
+                <Text variant={'medium'} block>
+                    Your account was successfully validated.
+                </Text>
+                <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>Go to login page</Link>
+                <br/>
+            </Stack>
+        </div>
+    );
+};
+
+function RegisterBox() {
+    const {palette} = getTheme();
+    const [err, setErr] = useState({username: "", name: "", email: "", pass: ""});
+    const [registrationState, setRegistrationState] = useState(RegistrationStates.DATA_FORM);
 
     const validatePassword = password => {
         return password.length >= 6;
     };
 
-    const registerUser = () => {
+    const registerUser = async () => {
         const data = {
             username: document.getElementById("field-user").value,
             name: document.getElementById("field-user").value,
@@ -31,53 +67,64 @@ function RegisterPanel() {
 
         // Validate fields
         if (!validatePassword(data.password)) {
-            setState({passErr: "Password must have at least 6 characters"});
+            setErr({pass: "Password must have at least 6 characters"});
             areFieldsValid = false;
         }
 
         if (areFieldsValid) {
-            //TODO Submit registration request to server
-            console.log(data);
-            // const response = await axios.post(
-            //     '',
-            //     { example: 'data' },
-            //     { headers: { 'Content-Type': 'application/json' } }
-            // );
+            // submit registration request to server
+            try {
+                await bridge.register(data);
+
+                // successful registration; show the "validate email" modal
+                setRegistrationState(RegistrationStates.EMAIL_CONFIRM);
+            } catch (err) {
+                const result = err.response.data;
+                if (result.errorCode === 0) {
+                    const param = result.duplicatedKey;
+                    setErr({[param]: `${param.charAt(0).toUpperCase() + param.slice(1)} already exists`});
+                }
+            }
         }
     };
 
     return (
-        <div className="login"
-             style={{
-                 boxShadow: Depths.depth4
-             }}>
+        <div className="box" style={{boxShadow: Depths.depth4}}>
             <Stack className="slide" tokens={{childrenGap: 20}}>
-                <h2>Register</h2>
-                <Text variant={'smallPlus'} block>
-                    Create an account to be able to use the platform
-                </Text>
+                {
+                    registrationState === RegistrationStates.EMAIL_CONFIRM ? <ValidateEmailBox/> :
+                        <>
+                            <h2>Register</h2>
+                            < Text variant={'smallPlus'} block>
+                                Create an account to be able to use the platform
+                            </Text>
 
-                <form>
-                    <Stack tokens={{childrenGap: 20}}>
-                        <TextField id="field-user" label="Username:" underlined required autoComplete="username"/>
-                        <TextField id="field_name" label="Name:" underlined required autoComplete="name"/>
-                        <TextField id="field-email" label="Email:" underlined required autocomplete="email"/>
-                        <TextField id="field-pass" label="Password:" type="password" autoComplete="current-password"
-                                   errorMessage={state.passErr} underlined required/>
+                            <form>
+                                <Stack tokens={{childrenGap: 20}}>
+                                    <TextField id="field-user" label="Username:" underlined required
+                                               autoComplete="username" errorMessage={err.username}/>
+                                    <TextField id="field_name" label="Name:" underlined required
+                                               autoComplete="name" errorMessage={err.name}/>
+                                    <TextField id="field-email" label="Email:" underlined required
+                                               autocomplete="email" errorMessage={err.email}/>
+                                    <TextField id="field-pass" label="Password:" type="password" underlined required
+                                               autoComplete="current-password" errorMessage={err.pass}/>
 
-                        <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
-                            Already have an account? Log In
-                        </Link>
+                                    <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
+                                        Already have an account? Log In
+                                    </Link>
 
-                        <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
-                            <DefaultButton text="Back" allowDisabledFocus/>
-                            <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
-                        </Stack>
-                    </Stack>
-                </form>
+                                    <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+                                        <DefaultButton text="Back" allowDisabledFocus/>
+                                        <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
+                                    </Stack>
+                                </Stack>
+                            </form>
+                        </>
+                }
             </Stack>
         </div>
     );
 }
 
-export default RegisterPanel;
+export {RegisterBox, EmailConfirm};
