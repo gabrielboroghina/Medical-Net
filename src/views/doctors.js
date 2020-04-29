@@ -83,7 +83,6 @@ const _farItems = [
     },
 ];
 
-
 const Card = props => {
     return (
         <DocumentCard
@@ -114,17 +113,24 @@ const Card = props => {
 
 
 const ROWS_PER_PAGE = 3;
-const MAX_ROW_HEIGHT = 250;
+const listGridExamplePadder = {
+    position: 'absolute',
+    left: 10,
+    top: 2,
+    right: 10,
+    bottom: 2,
+};
 
-class ListGridExample extends React.Component {
+class ListGrid extends React.Component {
     constructor(props) {
         super(props);
         this._items = props.items;
+        this.minCardWidth = 210;
     }
 
     _getItemCountForPage = (itemIndex, surfaceRect) => {
         if (itemIndex === 0) {
-            this._columnCount = Math.ceil(surfaceRect.width / MAX_ROW_HEIGHT);
+            this._columnCount = Math.floor(surfaceRect.width / this.minCardWidth);
             this._columnWidth = Math.floor(surfaceRect.width / this._columnCount);
             this._rowHeight = this._columnWidth;
         }
@@ -139,11 +145,12 @@ class ListGridExample extends React.Component {
     _onRenderCell = (item, index) => {
         return (
             <div
-                className={style.listGridExampleTile}
-                // data-is-focusable={true}
-                style={{width: 100 / this._columnCount + '%'}}
+                className={style.listGridTile}
+                style={{width: Math.floor(100 / this._columnCount) + '%'}}
             >
-                {item}
+                <div className={style.pad}>
+                    {item}
+                </div>
             </div>
         );
     };
@@ -151,7 +158,7 @@ class ListGridExample extends React.Component {
     render() {
         return (
             <List
-                className={style.listGridExample}
+                className={style.listGrid}
                 items={this._items}
                 getItemCountForPage={this._getItemCountForPage}
                 getPageHeight={this._getPageHeight}
@@ -162,7 +169,7 @@ class ListGridExample extends React.Component {
     }
 }
 
-const CardGrid = () => {
+const Doctors = () => {
     const cards = [];
     for (let i = 0; i < 5; i++) {
         const card = <Card name={`Card no ${i}`}/>;
@@ -170,7 +177,7 @@ const CardGrid = () => {
     }
 
     return (
-        <div className={style.CardGrid} style={{backgroundColor: palette.neutralLighter}}>
+        <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
             <CommandBar
                 style={{boxShadow: Depths.depth8}}
                 items={_items}
@@ -178,10 +185,9 @@ const CardGrid = () => {
                 overflowButtonProps={overflowProps}
                 farItems={_farItems}
             />
-
-            <ListGridExample items={cards}/>
+            <ListGrid items={cards}/>
         </div>
     );
 };
 
-export default CardGrid;
+export default Doctors;

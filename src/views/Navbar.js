@@ -1,11 +1,12 @@
 import * as React from 'react';
-import '../App.css';
+import '../App.scss';
 import style from '../style.module.scss';
+import {Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import {
     Stack,
     Persona, PersonaSize, Callout, DefaultButton, CommandBarButton,
-    initializeIcons, ContextualMenuItemType
+    initializeIcons, ContextualMenuItemType, Text,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 import {useConst, useConstCallback} from '@uifabric/react-hooks';
@@ -59,10 +60,22 @@ const Navbar = props => {
     });
 
     return (
-        <div className="navbar" style={{boxShadow: Depths.depth4}}>
-            <div className={style.logo}>
-                <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
-            </div>
+        <div className="navbar" style={{boxShadow: Depths.depth16}}>
+            <Stack className="navbar-nav" horizontal tokens={{childrenGap: 20}}>
+                <div className={style.logo}>
+                    <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
+                </div>
+
+                <div className="vertical-separator"/>
+
+                <Link className="nav-link" to={"/doctors"}>
+                    <Text variant={"mediumPlus"}>Doctors</Text>
+                </Link>
+                <Link className="nav-link" to={"/faq"}>
+                    <Text variant={"mediumPlus"}>FAQ</Text>
+                </Link>
+            </Stack>
+
             <Stack className="navbar-stack" horizontal horizontalAlign="end">
                 <CommandBarButton className="persona-btn" menuProps={menuProps}>
                     <Persona

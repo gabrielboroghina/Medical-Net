@@ -3,21 +3,11 @@
 
   img {
     margin: auto;
-    margin-left: 2%;
+    padding-left: 2%;
   }
 }
 
-@keyframes example {
-  0%   {background-color:red; left:0px; top:0px;}
-  25%  {background-color:yellow; left:200px; top:0px;}
-  50%  {background-color:blue; left:200px; top:200px;}
-  75%  {background-color:green; left:0px; top:200px;}
-  100% {background-color:red; left:0px; top:0px;}
-}
-
-
-
-.CardGrid {
+.cardGridContainer {
   position: relative;
   margin: 100px auto 50px auto;
 
@@ -26,28 +16,24 @@
   flex-direction: column;
 }
 
-@media screen and (max-width: 600px) {
-  .CardGrid {
-    width: 100%;
-  }
-}
-
-.listGridExampleTile {
+.listGridTile {
   position: relative;
   outline: none;
   float: left;
 
-  padding-left: 20px;
+  display: flex;
+  justify-content: center;
+
   padding-top: 10px;
 }
 
-.listGridExample {
-  overflow: scroll;
+.listGrid {
+  padding: 0 20px;
+  overflow: auto;
 }
 
 .card {
   display: inline-block;
-  margin-right: 20px;
   margin-bottom: 20px;
 }
 
@@ -65,4 +51,65 @@
       padding-right: 20px;
     }
   }
+}
+
+.content {
+  box-sizing: border-box;
+  margin: 100px auto 50px auto;
+  padding: 40px 30px;
+
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+
+  background-color: white;
+}
+
+.groupListHeader {
+  padding: 0 10px;
+
+  border: none;
+  border-bottom: 1px solid gray;
+
+  background-color: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #edebe9;
+  }
+}
+
+.questionFormBox {
+  width: 55%;
+}
+
+@media screen and (max-width: 600px) {
+  .cardGridContainer {
+    width: 100%;
+    margin: 100px 10px 50px 10px;
+  }
+
+  .content {
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .questionFormBox {
+    width: 70%;
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .questionFormBox {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+.pad {
+  padding: 8px;
 }

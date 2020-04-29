@@ -1,7 +1,8 @@
 import * as React from 'react';
-import '../App.css';
-import {Link} from 'react-router-dom';
-
+import '../App.scss';
+import {Link, useHistory} from 'react-router-dom';
+import {useState} from "react";
+import bridge from "../bridge";
 
 import {
     DefaultButton, PrimaryButton,
@@ -14,9 +15,24 @@ import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
 const LoginPanel = props => {
     const {palette} = getTheme();
+    const [err, setErr] = useState("");
+    const history = useHistory();
 
-    const authenticateUser = () => {
+    const authenticateUser = async () => {
+        const authData = {
+            username: document.getElementById("field-user").value,
+            password: document.getElementById("field-pass").value,
+        };
 
+        try {
+            await bridge.login(authData);
+
+            // successful authentication; redirect user
+            history.push('/');
+        } catch (err) {
+            const response = err.response.data;
+            setErr(response.description);
+        }
     };
 
     return (
@@ -25,8 +41,10 @@ const LoginPanel = props => {
                 <h2>Sign In</h2>
                 <form>
                     <Stack tokens={{childrenGap: 20}}>
-                        <TextField label="Username:" underlined autoComplete="username"/>
-                        <TextField label="Password:" type="password" underlined autoComplete="current-password"/>
+                        <TextField label="Username:" id="field-user"
+                                   underlined autoComplete="username"/>
+                        <TextField label="Password:" id="field-pass" type="password"
+                                   underlined autoComplete="current-password" errorMessage={err}/>
                         <Link className="small-link" to="/register" style={{color: palette.themePrimary}}>
                             Don't have an account?
                         </Link>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import '../App.css';
+import '../App.scss';
 import {Link} from 'react-router-dom';
 import bridge from '../bridge'
 
@@ -49,7 +49,7 @@ const EmailConfirm = () => {
 
 function RegisterBox() {
     const {palette} = getTheme();
-    const [err, setErr] = useState({username: "", name: "", email: "", pass: ""});
+    const [err, setErr] = useState({username: "", name: "", email: "", password: ""});
     const [registrationState, setRegistrationState] = useState(RegistrationStates.DATA_FORM);
 
     const validatePassword = password => {
@@ -79,10 +79,10 @@ function RegisterBox() {
                 // successful registration; show the "validate email" modal
                 setRegistrationState(RegistrationStates.EMAIL_CONFIRM);
             } catch (err) {
-                const result = err.response.data;
-                if (result.errorCode === 0) {
-                    const param = result.duplicatedKey;
-                    setErr({[param]: `${param.charAt(0).toUpperCase() + param.slice(1)} already exists`});
+                const response = err.response.data;
+                if (response.errorCode === 0) { // invalid field
+                    const param = response.field;
+                    setErr({[param]: response.description});
                 }
             }
         }
@@ -108,7 +108,7 @@ function RegisterBox() {
                                     <TextField id="field-email" label="Email:" underlined required
                                                autocomplete="email" errorMessage={err.email}/>
                                     <TextField id="field-pass" label="Password:" type="password" underlined required
-                                               autoComplete="current-password" errorMessage={err.pass}/>
+                                               autoComplete="current-password" errorMessage={err.password}/>
 
                                     <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
                                         Already have an account? Log In

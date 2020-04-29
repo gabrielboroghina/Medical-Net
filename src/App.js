@@ -1,13 +1,14 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
 import Navbar from "./views/Navbar";
-import CardGrid from "./views/doctors";
+import Doctors from "./views/doctors";
 import {Footer} from "./views/Footer";
 import {GDPRModal} from "./views/gdprModal";
 import LoginPanel from "./views/login";
+import Faq from "./views/faq";
 
 
 const customTheme = createTheme({
@@ -42,14 +43,16 @@ class App extends React.Component {
     render() {
         return (
             <>
-                <Navbar/>
                 <div className="main">
                     <BrowserRouter basename="/">
+                        <Navbar/>
+
                         <Switch>
                             <Route path="/login" component={LoginPanel}/>
                             <Route path="/register" component={RegisterBox}/>
-                            <Route path="/doctors" component={CardGrid}/>
+                            <Route path="/doctors" component={Doctors}/>
                             <Route path="/emailconfirmed" component={EmailConfirm}/>
+                            <Route path="/faq" component={Faq}/>
                         </Switch>
                     </BrowserRouter>
                 </div>

@@ -9,6 +9,36 @@ async function register(data) {
     );
 }
 
+async function login(data) {
+    await axios.post(
+        `${config.apiUrl}/users/login`,
+        data,
+        {
+            headers: {'Content-Type': 'application/json'},
+            withCredentials: true
+        }
+    );
+}
+
+async function getMessages() {
+    return await axios.get(`${config.apiUrl}/messages`,
+        {
+            withCredentials: true
+        });
+}
+
+async function sendMessage(data) {
+    console.log(data);
+    await axios.post(
+        `${config.apiUrl}/messages`,
+        data,
+        {headers: {'Content-Type': 'application/json'}}
+    );
+}
+
 export default {
-    register
+    register,
+    login,
+    getMessages,
+    sendMessage,
 };
