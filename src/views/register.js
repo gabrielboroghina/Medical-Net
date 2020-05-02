@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import '../App.scss';
 import {Link} from 'react-router-dom';
 import bridge from '../bridge'
+import style from '../style.module.scss';
 
 import {
-    Text,
+    Text, TextField,
     DefaultButton, PrimaryButton,
     Stack,
-    TextField,
     getTheme,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
@@ -33,16 +33,18 @@ const EmailConfirm = () => {
     const {palette} = getTheme();
 
     return (
-        <div className="box"
-             style={{boxShadow: Depths.depth4}}>
-            <Stack className="slide" tokens={{childrenGap: 20}}>
-                <h2>Email confirmed</h2>
-                <Text variant={'medium'} block>
-                    Your account was successfully validated.
-                </Text>
-                <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>Go to login page</Link>
-                <br/>
-            </Stack>
+        <div className={style.flexContainer}>
+            <div className={style.box} style={{boxShadow: Depths.depth4}}>
+                <Stack className="slide" tokens={{childrenGap: 20}}>
+                    <h2>Email confirmed</h2>
+                    <Text variant={'medium'} block>
+                        Your account was successfully validated.
+                    </Text>
+                    <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>Go to login
+                        page</Link>
+                    <br/>
+                </Stack>
+            </div>
         </div>
     );
 };
@@ -106,7 +108,7 @@ function RegisterBox() {
                     <TextField id="field-pass" label="Password:" type="password" underlined required
                                autoComplete="current-password" errorMessage={err.password}/>
 
-                    <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
+                    <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>
                         Already have an account? Log In
                     </Link>
 
@@ -120,8 +122,8 @@ function RegisterBox() {
     );
 
     return (
-        <div className={"container"}>
-            <div className="box" style={{boxShadow: Depths.depth4}}>
+        <div className={style.flexContainer}>
+            <div className={style.box} style={{boxShadow: Depths.depth4}}>
                 <Stack className="slide" tokens={{childrenGap: 20}}>
                     {
                         registrationState === RegistrationStates.EMAIL_CONFIRM

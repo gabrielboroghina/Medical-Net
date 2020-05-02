@@ -58,24 +58,23 @@ const Navbar = props => {
     });
 
     return (
-        <div className="navbar" style={{boxShadow: Depths.depth16}}>
-            <Stack className="navbar-nav" horizontal tokens={{childrenGap: 20}}>
+        <div className={style.nav} style={{boxShadow: Depths.depth16}}>
+            <Stack className={style.nav} horizontal tokens={{childrenGap: 20}}>
                 <div className={style.logo}>
                     <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
                 </div>
 
-                <div className="vertical-separator"/>
-
-                <Link className="nav-link" to={"/doctors"}>
+                <div className={style.verticalSeparator}/>
+                <Link className={style.link} to={"/doctors"}>
                     <Text variant={"mediumPlus"}>Doctors</Text>
                 </Link>
-                <Link className="nav-link" to={"/faq"}>
+                <Link className={style.link} to={"/faq"}>
                     <Text variant={"mediumPlus"}>FAQ</Text>
                 </Link>
             </Stack>
 
-            <Stack className="navbar-stack" horizontal horizontalAlign="end">
-                <CommandBarButton className="persona-btn" menuProps={menuProps}>
+            <Stack className={style.stack} horizontal horizontalAlign="end">
+                <CommandBarButton className={style.personaBtn} menuProps={menuProps}>
                     <Persona
                         {...persona}
                         size={PersonaSize.size32}

@@ -167,7 +167,7 @@ const Doctors = () => {
     }
 
     return (
-        <div className={style.container}>
+        <div className={style.flexContainer}>
             <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
                 <CommandBar
                     style={{boxShadow: Depths.depth8}}

@@ -9,6 +9,7 @@
     "@uifabric/react-hooks": "latest",
     "axios": "^0.19.2",
     "node-sass": "^4.13.1",
+    "office-ui-fabric-core": "^11.0.0",
     "office-ui-fabric-react": "^7.102.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",

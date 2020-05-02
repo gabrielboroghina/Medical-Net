@@ -3,6 +3,7 @@ import '../App.scss';
 import {Link, useHistory} from 'react-router-dom';
 import {useState} from "react";
 import bridge from "../bridge";
+import style from '../style.module.scss';
 
 import {
     DefaultButton, PrimaryButton,
@@ -36,8 +37,8 @@ const LoginPanel = props => {
     };
 
     return (
-        <div className="container">
-            <div className="box" style={{boxShadow: Depths.depth4}}>
+        <div className={style.flexContainer}>
+            <div className={style.box} style={{boxShadow: Depths.depth4}}>
                 <Stack className="slide" tokens={{childrenGap: 20}}>
                     <h2>Sign In</h2>
                     <form>
@@ -46,7 +47,7 @@ const LoginPanel = props => {
                                        underlined autoComplete="username"/>
                             <TextField label="Password:" id="field-pass" type="password"
                                        underlined autoComplete="current-password" errorMessage={err}/>
-                            <Link className="small-link" to="/register" style={{color: palette.themePrimary}}>
+                            <Link className={style.smallLink} to="/register" style={{color: palette.themePrimary}}>
                                 Don't have an account?
                             </Link>
 

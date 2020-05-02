@@ -20,11 +20,13 @@ const Faq = () => {
     const {palette} = getTheme();
 
     return (
-        <div className={style.content} style={{backgroundColor: palette.white}}>
-            <Stack tokens={{childrenGap: 10}}>
-                <QuestionForm/>
-                <FaqGroupedList/>
-            </Stack>
+        <div className={style.flexContainer} style={{height: "auto", minHeight: "100%"}}>
+            <div className={style.content} style={{backgroundColor: palette.white}}>
+                <Stack tokens={{childrenGap: 10}}>
+                    <QuestionForm/>
+                    <FaqGroupedList/>
+                </Stack>
+            </div>
         </div>
     );
 };

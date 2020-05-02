@@ -89,7 +89,7 @@ const EditBox = props => {
     };
 
     return (
-        <div className="slide" style={{}}>
+        <div className="slide">
             <IconButton iconProps={{iconName: "ChromeBack"}} title="Back" ariaLabel="Back"
                         onClick={() => props.doneCallback(false)}
                         style={{marginTop: 15, marginLeft: 5}}
@@ -209,7 +209,7 @@ const MessagesManagementBoard = () => {
     };
 
     return (
-        <div className={style.container}>
+        <div className={style.flexContainer}>
             <div className={style.cardGridContainer} style={{backgroundColor: palette.white}}>
                 <div className={style.msgMgmtHeader}>
                     <h3>Messages Management</h3>
