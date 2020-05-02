@@ -9,6 +9,7 @@ import {Footer} from "./views/Footer";
 import {GDPRModal} from "./views/gdprModal";
 import LoginPanel from "./views/login";
 import Faq from "./views/faq";
+import MessagesManagementBoard from "./views/support-dashboard";
 
 
 const customTheme = createTheme({
@@ -42,23 +43,20 @@ loadTheme(customTheme);
 class App extends React.Component {
     render() {
         return (
-            <>
-                <div className="main">
-                    <BrowserRouter basename="/">
-                        <Navbar/>
+            <BrowserRouter basename="/">
+                <Navbar/>
 
-                        <Switch>
-                            <Route path="/login" component={LoginPanel}/>
-                            <Route path="/register" component={RegisterBox}/>
-                            <Route path="/doctors" component={Doctors}/>
-                            <Route path="/emailconfirmed" component={EmailConfirm}/>
-                            <Route path="/faq" component={Faq}/>
-                        </Switch>
-                    </BrowserRouter>
-                </div>
+                <Switch>
+                    <Route path="/login" component={LoginPanel}/>
+                    <Route path="/register" component={RegisterBox}/>
+                    <Route path="/doctors" component={Doctors}/>
+                    <Route path="/emailconfirmed" component={EmailConfirm}/>
+                    <Route path="/faq" component={Faq}/>
+                    <Route path="/support-dashboard" component={MessagesManagementBoard}/>
+                </Switch>
                 <Footer/>
                 <GDPRModal/>
-            </>
+            </BrowserRouter>
         );
     }
 }

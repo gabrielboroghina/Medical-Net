@@ -98,13 +98,13 @@ const FaqGroupedList = () => {
     async function fetchData() {
         // fetch messages data from server
         const messages = (await bridge.getMessages()).data;
-
+        console.log(messages);
         setData({
             items: messages,
-            groups: messages.map(msg => ({
-                key: `group${msg.id}`,
-                name: `group${msg.id}`,
-                startIndex: msg.id - 1,
+            groups: messages.map((msg, idx) => ({
+                key: `group${idx}`,
+                name: `group${idx}`,
+                startIndex: idx,
                 count: 1,
                 level: 0,
                 isCollapsed: false,
@@ -143,11 +143,10 @@ const FaqGroupedList = () => {
         <Stack tokens={{childrenGap: 20}}>
             <h2>Frequently Asked Questions</h2>
 
-            <GroupedList
-                items={data.items}
-                onRenderCell={_onRenderCell}
-                groupProps={{onRenderHeader: _onRenderHeader}}
-                groups={data.groups}
+            <GroupedList items={data.items}
+                         onRenderCell={_onRenderCell}
+                         groupProps={{onRenderHeader: _onRenderHeader}}
+                         groups={data.groups}
             />
         </Stack>
     );

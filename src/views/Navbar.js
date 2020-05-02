@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../App.scss';
 import style from '../style.module.scss';
-import {Link, BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import {
     Stack,
@@ -15,6 +15,9 @@ import {useConst, useConstCallback} from '@uifabric/react-hooks';
 initializeIcons();
 
 const Navbar = props => {
+    const [showCallout, setShowCallout] = React.useState(false);
+    const onShowCallout = useConstCallback(() => setShowCallout(true));
+    const onHideCallout = useConstCallback(() => setShowCallout(false));
 
     const persona = {
         imageInitials: 'GB',
@@ -23,11 +26,6 @@ const Navbar = props => {
         tertiaryText: 'In a meeting',
         optionalText: 'Available at 4:00pm',
     };
-
-    const [showCallout, setShowCallout] = React.useState(false);
-
-    const onShowCallout = useConstCallback(() => setShowCallout(true));
-    const onHideCallout = useConstCallback(() => setShowCallout(false));
 
     const menuItems = useConst([
         {

@@ -27,7 +27,7 @@ const LoginPanel = props => {
         try {
             await bridge.login(authData);
 
-            // successful authentication; redirect user
+            // successful authentication; redirect the user
             history.push('/');
         } catch (err) {
             const response = err.response.data;
@@ -36,26 +36,28 @@ const LoginPanel = props => {
     };
 
     return (
-        <div className="box" style={{boxShadow: Depths.depth4}}>
-            <Stack className="slide" tokens={{childrenGap: 20}}>
-                <h2>Sign In</h2>
-                <form>
-                    <Stack tokens={{childrenGap: 20}}>
-                        <TextField label="Username:" id="field-user"
-                                   underlined autoComplete="username"/>
-                        <TextField label="Password:" id="field-pass" type="password"
-                                   underlined autoComplete="current-password" errorMessage={err}/>
-                        <Link className="small-link" to="/register" style={{color: palette.themePrimary}}>
-                            Don't have an account?
-                        </Link>
+        <div className="container">
+            <div className="box" style={{boxShadow: Depths.depth4}}>
+                <Stack className="slide" tokens={{childrenGap: 20}}>
+                    <h2>Sign In</h2>
+                    <form>
+                        <Stack tokens={{childrenGap: 20}}>
+                            <TextField label="Username:" id="field-user"
+                                       underlined autoComplete="username"/>
+                            <TextField label="Password:" id="field-pass" type="password"
+                                       underlined autoComplete="current-password" errorMessage={err}/>
+                            <Link className="small-link" to="/register" style={{color: palette.themePrimary}}>
+                                Don't have an account?
+                            </Link>
 
-                        <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
-                            <DefaultButton text="Back" allowDisabledFocus/>
-                            <PrimaryButton text="Sign in" onClick={authenticateUser} allowDisabledFocus/>
+                            <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+                                <DefaultButton text="Back" allowDisabledFocus/>
+                                <PrimaryButton text="Sign in" onClick={authenticateUser} allowDisabledFocus/>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </form>
-            </Stack>
+                    </form>
+                </Stack>
+            </div>
         </div>
     );
 };

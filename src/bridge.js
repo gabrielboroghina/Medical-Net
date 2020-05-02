@@ -28,10 +28,17 @@ async function getMessages() {
 }
 
 async function sendMessage(data) {
-    console.log(data);
     await axios.post(
         `${config.apiUrl}/messages`,
         data,
+        {headers: {'Content-Type': 'application/json'}}
+    );
+}
+
+async function setMessageResponse(msgId, response) {
+    await axios.put(
+        `${config.apiUrl}/messages/${msgId}`,
+        {response: response},
         {headers: {'Content-Type': 'application/json'}}
     );
 }
@@ -41,4 +48,5 @@ export default {
     login,
     getMessages,
     sendMessage,
+    setMessageResponse,
 };

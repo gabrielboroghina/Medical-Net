@@ -13,7 +13,6 @@ import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
 
 const {palette} = getTheme();
-const overflowProps = {ariaLabel: 'More commands'};
 
 const _items = [
     {
@@ -113,13 +112,6 @@ const Card = props => {
 
 
 const ROWS_PER_PAGE = 3;
-const listGridExamplePadder = {
-    position: 'absolute',
-    left: 10,
-    top: 2,
-    right: 10,
-    bottom: 2,
-};
 
 class ListGrid extends React.Component {
     constructor(props) {
@@ -144,9 +136,8 @@ class ListGrid extends React.Component {
 
     _onRenderCell = (item, index) => {
         return (
-            <div
-                className={style.listGridTile}
-                style={{width: Math.floor(100 / this._columnCount) + '%'}}
+            <div className={style.listGridTile}
+                 style={{width: Math.floor(100 / this._columnCount) + '%'}}
             >
                 <div className={style.pad}>
                     {item}
@@ -157,13 +148,12 @@ class ListGrid extends React.Component {
 
     render() {
         return (
-            <List
-                className={style.listGrid}
-                items={this._items}
-                getItemCountForPage={this._getItemCountForPage}
-                getPageHeight={this._getPageHeight}
-                renderedWindowsAhead={4}
-                onRenderCell={this._onRenderCell}
+            <List className={style.listGrid}
+                  items={this._items}
+                  getItemCountForPage={this._getItemCountForPage}
+                  getPageHeight={this._getPageHeight}
+                  renderedWindowsAhead={4}
+                  onRenderCell={this._onRenderCell}
             />
         );
     }
@@ -177,15 +167,16 @@ const Doctors = () => {
     }
 
     return (
-        <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
-            <CommandBar
-                style={{boxShadow: Depths.depth8}}
-                items={_items}
-                overflowItems={_overflowItems}
-                overflowButtonProps={overflowProps}
-                farItems={_farItems}
-            />
-            <ListGrid items={cards}/>
+        <div className={style.container}>
+            <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
+                <CommandBar
+                    style={{boxShadow: Depths.depth8}}
+                    items={_items}
+                    overflowItems={_overflowItems}
+                    farItems={_farItems}
+                />
+                <ListGrid items={cards}/>
+            </div>
         </div>
     );
 };

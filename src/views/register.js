@@ -88,41 +88,48 @@ function RegisterBox() {
         }
     };
 
+    const RegisterForm = () => (
+        <>
+            <h2>Register</h2>
+            < Text variant={'smallPlus'} block>
+                Create an account to be able to use the platform
+            </Text>
+
+            <form>
+                <Stack tokens={{childrenGap: 20}}>
+                    <TextField id="field-user" label="Username:" underlined required
+                               autoComplete="username" errorMessage={err.username}/>
+                    <TextField id="field_name" label="Name:" underlined required
+                               autoComplete="name" errorMessage={err.name}/>
+                    <TextField id="field-email" label="Email:" underlined required
+                               autocomplete="email" errorMessage={err.email}/>
+                    <TextField id="field-pass" label="Password:" type="password" underlined required
+                               autoComplete="current-password" errorMessage={err.password}/>
+
+                    <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
+                        Already have an account? Log In
+                    </Link>
+
+                    <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+                        <DefaultButton text="Back" allowDisabledFocus/>
+                        <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
+                    </Stack>
+                </Stack>
+            </form>
+        </>
+    );
+
     return (
-        <div className="box" style={{boxShadow: Depths.depth4}}>
-            <Stack className="slide" tokens={{childrenGap: 20}}>
-                {
-                    registrationState === RegistrationStates.EMAIL_CONFIRM ? <ValidateEmailBox/> :
-                        <>
-                            <h2>Register</h2>
-                            < Text variant={'smallPlus'} block>
-                                Create an account to be able to use the platform
-                            </Text>
-
-                            <form>
-                                <Stack tokens={{childrenGap: 20}}>
-                                    <TextField id="field-user" label="Username:" underlined required
-                                               autoComplete="username" errorMessage={err.username}/>
-                                    <TextField id="field_name" label="Name:" underlined required
-                                               autoComplete="name" errorMessage={err.name}/>
-                                    <TextField id="field-email" label="Email:" underlined required
-                                               autocomplete="email" errorMessage={err.email}/>
-                                    <TextField id="field-pass" label="Password:" type="password" underlined required
-                                               autoComplete="current-password" errorMessage={err.password}/>
-
-                                    <Link className="small-link" to="/login" style={{color: palette.themePrimary}}>
-                                        Already have an account? Log In
-                                    </Link>
-
-                                    <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
-                                        <DefaultButton text="Back" allowDisabledFocus/>
-                                        <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
-                                    </Stack>
-                                </Stack>
-                            </form>
-                        </>
-                }
-            </Stack>
+        <div className={"container"}>
+            <div className="box" style={{boxShadow: Depths.depth4}}>
+                <Stack className="slide" tokens={{childrenGap: 20}}>
+                    {
+                        registrationState === RegistrationStates.EMAIL_CONFIRM
+                            ? <ValidateEmailBox/>
+                            : <RegisterForm/>
+                    }
+                </Stack>
+            </div>
         </div>
     );
 }
