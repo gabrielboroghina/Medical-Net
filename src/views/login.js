@@ -12,12 +12,14 @@ import {
     getTheme
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
+import {useCookies} from "react-cookie";
 
 
 const LoginPanel = props => {
     const {palette} = getTheme();
     const [err, setErr] = useState("");
     const history = useHistory();
+    const [cookies, setCookie, removeCookie] = useCookies([]);
 
     const authenticateUser = async () => {
         const authData = {
@@ -26,7 +28,9 @@ const LoginPanel = props => {
         };
 
         try {
-            await bridge.login(authData);
+            const data = (await bridge.login(authData)).data;
+            setCookie("access_token", data.accessToken);
+            setCookie("user_profile", data.userProfile);
 
             // successful authentication; redirect the user
             history.push('/');

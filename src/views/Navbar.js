@@ -1,44 +1,46 @@
 import * as React from 'react';
 import '../App.scss';
 import style from '../style.module.scss';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 
 import {
-    Stack,
-    Persona, PersonaSize, Callout, DefaultButton, CommandBarButton,
-    initializeIcons, ContextualMenuItemType, Text,
+    Stack, Text,
+    Persona, PersonaSize, Callout, DefaultButton, ActionButton, CommandBarButton,
+    initializeIcons, ContextualMenuItemType,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 import {useConst, useConstCallback} from '@uifabric/react-hooks';
+import {useCookies} from "react-cookie";
 
 
 initializeIcons();
 
 const Navbar = props => {
     const [showCallout, setShowCallout] = React.useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
+    const history = useHistory();
+
     const onShowCallout = useConstCallback(() => setShowCallout(true));
     const onHideCallout = useConstCallback(() => setShowCallout(false));
 
-    const persona = {
-        imageInitials: 'GB',
-        text: 'Gabriel',
-        secondaryText: 'Software Engineer',
-        tertiaryText: 'In a meeting',
-        optionalText: 'Available at 4:00pm',
+    const signOut = () => {
+        removeCookie('access_token');
+        removeCookie('user_profile');
+        history.push('/');
     };
 
+    const persona = props.user ? {
+        imageInitials: props.user.name
+            .split(' ')
+            .map(token => token[0])
+            .join('')
+            .substr(0, 2)
+            .toUpperCase(),
+        text: props.user.name,
+        secondaryText: props.user.email,
+    } : null;
+
     const menuItems = useConst([
-        {
-            key: 'upload',
-            onClick: onShowCallout,
-            iconProps: {
-                iconName: 'Upload',
-                style: {
-                    color: 'salmon',
-                },
-            },
-            text: 'Upload (Click for popup)',
-        },
         {
             key: 'divider_1',
             itemType: ContextualMenuItemType.Divider,
@@ -47,14 +49,31 @@ const Navbar = props => {
             key: 'signout',
             iconProps: {
                 iconName: 'UserRemove',
+                style: {
+                    color: 'salmon',
+                },
             },
             text: 'Sign out',
+            onClick: signOut
         },
     ]);
+
+    const renderMenuList = useConstCallback((menuListProps, defaultRender) => {
+        return (
+            <>
+                <div className={style.accountBox}>
+                    <h4>{props.user.name}</h4>
+                    <Text><b>Email:</b> {props.user.email}</Text>
+                </div>
+                {defaultRender(menuListProps)}
+            </>
+        );
+    });
 
     const menuProps = useConst({
         shouldFocusOnMount: true,
         items: menuItems,
+        onRenderMenuList: renderMenuList,
     });
 
     return (
@@ -74,14 +93,23 @@ const Navbar = props => {
             </Stack>
 
             <Stack className={style.stack} horizontal horizontalAlign="end">
-                <CommandBarButton className={style.personaBtn} menuProps={menuProps}>
-                    <Persona
-                        {...persona}
-                        size={PersonaSize.size32}
-                        hidePersonaDetails={false}
-                        imageAlt="Annie Lindqvist, status is online"
-                    />
-                </CommandBarButton>
+                {
+                    props.user
+                        ?
+                        <CommandBarButton className={style.personaBtn} menuProps={menuProps}>
+                            <Persona{...persona}
+                                    size={PersonaSize.size32}
+                                    hidePersonaDetails={false}
+                                    imageAlt=""
+                            />
+                        </CommandBarButton>
+                        :
+                        <Link to={'/login'}>
+                            <ActionButton iconProps={{iconName: 'Signin'}} className={style.personaBtnSimple}>
+                                Sign in
+                            </ActionButton>
+                        </Link>
+                }
 
                 {showCallout && (
                     <Callout setInitialFocus={true} onDismiss={onHideCallout}>

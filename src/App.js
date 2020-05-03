@@ -42,14 +42,17 @@ const customTheme = createTheme({
 loadTheme(customTheme);
 
 const App = () => {
-    const [cookies, setCookie, removeCookie] = useCookies([]);
+    const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
 
     // get session information
-    const cookieConsent = cookies['cookie-consent'];
+    const cookieConsent = cookies['cookie_consent'];
+
+    const accessToken = cookies['access_token'];
+    const userProfile = cookies['user_profile'];
 
     return (
         <BrowserRouter basename="/">
-            <Navbar/>
+            <Navbar user={userProfile}/>
 
             <Switch>
                 <Route path="/login" component={LoginPanel}/>

@@ -1,3 +1,5 @@
+@import '~office-ui-fabric-core/src/sass/variables/Color.Variables';
+
 .logo {
   display: flex;
 
@@ -57,8 +59,17 @@
 }
 
 .personaBtn {
-  padding: 0 10px;
+  padding: 0 30px 0 10px;
   height: 100%;
+}
+
+.personaBtnSimple {
+  padding: 0 30px 0 10px;
+  height: 100%;
+
+  &:hover {
+    background-color: $ms-color-neutralLighter;
+  }
 }
 
 .box {
@@ -245,4 +256,10 @@
   width: 100%;
   box-sizing: border-box;
   padding: 0 20px;
+}
+
+.accountBox {
+  box-sizing: border-box;
+  padding: 0 10px 10px 10px;
+  border-bottom: 1px solid #ccc;
 }

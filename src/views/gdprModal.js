@@ -9,7 +9,7 @@ import {
 
 export const GDPRModal = props => {
     const [hidden, setHidden] = useState(!props.show);
-    const [cookies, setCookie, removeCookie] = useCookies();
+    const [cookies, setCookie] = useCookies();
 
     const acceptCookies = () => {
         const acceptedCookies = {
@@ -18,7 +18,7 @@ export const GDPRModal = props => {
             analytics: document.getElementById("check-analytics").checked,
         };
 
-        setCookie('cookie-consent', acceptedCookies);
+        setCookie('cookie_consent', acceptedCookies);
         setHidden(true);
     };
 

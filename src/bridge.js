@@ -1,6 +1,17 @@
 import axios from "axios";
 import config from "./config";
 
+function getToken() {
+    const token = document.cookie
+        .split(';')
+        .map(cookie => cookie.trim().split('='))
+        .filter(cookie => cookie[0] === 'access_token');
+
+    if (token.length)
+        return `Bearer ${token[0][1]}`;
+    throw new Error("Not authenticated");
+}
+
 async function register(data) {
     await axios.post(
         `${config.apiUrl}/users/register`,
@@ -10,12 +21,11 @@ async function register(data) {
 }
 
 async function login(data) {
-    await axios.post(
+    return axios.post(
         `${config.apiUrl}/users/login`,
         data,
         {
             headers: {'Content-Type': 'application/json'},
-            withCredentials: true
         }
     );
 }
@@ -23,7 +33,9 @@ async function login(data) {
 async function getMessages() {
     return await axios.get(`${config.apiUrl}/messages`,
         {
-            withCredentials: true
+            headers: {
+                'Authorization': getToken(),
+            }
         });
 }
 
@@ -31,7 +43,12 @@ async function sendMessage(data) {
     await axios.post(
         `${config.apiUrl}/messages`,
         data,
-        {headers: {'Content-Type': 'application/json'}}
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getToken(),
+            }
+        }
     );
 }
 
@@ -39,7 +56,12 @@ async function updateMessage(msgId, newProps) {
     await axios.put(
         `${config.apiUrl}/messages/${msgId}`,
         newProps,
-        {headers: {'Content-Type': 'application/json'}}
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': getToken(),
+            }
+        }
     );
 }
 
