@@ -12,6 +12,7 @@
     "office-ui-fabric-core": "^11.0.0",
     "office-ui-fabric-react": "^7.102.0",
     "react": "^16.13.0",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0"

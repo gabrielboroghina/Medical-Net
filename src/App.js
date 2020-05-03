@@ -3,6 +3,7 @@ import './App.scss';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
+import {useCookies} from 'react-cookie';
 import Navbar from "./views/Navbar";
 import Doctors from "./views/doctors";
 import {Footer} from "./views/Footer";
@@ -40,25 +41,28 @@ const customTheme = createTheme({
 });
 loadTheme(customTheme);
 
-class App extends React.Component {
-    render() {
-        return (
-            <BrowserRouter basename="/">
-                <Navbar/>
+const App = () => {
+    const [cookies, setCookie, removeCookie] = useCookies([]);
 
-                <Switch>
-                    <Route path="/login" component={LoginPanel}/>
-                    <Route path="/register" component={RegisterBox}/>
-                    <Route path="/doctors" component={Doctors}/>
-                    <Route path="/emailconfirmed" component={EmailConfirm}/>
-                    <Route path="/faq" component={Faq}/>
-                    <Route path="/support-dashboard" component={MessagesManagementBoard}/>
-                </Switch>
-                <Footer/>
-                <GDPRModal/>
-            </BrowserRouter>
-        );
-    }
-}
+    // get session information
+    const cookieConsent = cookies['cookie-consent'];
+
+    return (
+        <BrowserRouter basename="/">
+            <Navbar/>
+
+            <Switch>
+                <Route path="/login" component={LoginPanel}/>
+                <Route path="/register" component={RegisterBox}/>
+                <Route path="/doctors" component={Doctors}/>
+                <Route path="/emailconfirmed" component={EmailConfirm}/>
+                <Route path="/faq" component={Faq}/>
+                <Route path="/support-dashboard" component={MessagesManagementBoard}/>
+            </Switch>
+            <Footer/>
+            <GDPRModal show={!cookieConsent}/>
+        </BrowserRouter>
+    );
+};
 
 export default App;
