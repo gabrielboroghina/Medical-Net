@@ -1,0 +1,44 @@
+{
+  "name": "nodejs-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate for NodeJS based projects",
+  "main": "start.js",
+  "scripts": {
+    "start-prod": "node start.js",
+    "start": "nodemon -r dotenv/config start.js",
+    "test-mail": "node -r dotenv/config src/users/mailer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/codeboilerplates/nodejs.git"
+  },
+  "author": "Alexandru Hogea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/codeboilerplates/nodejs/issues"
+  },
+  "homepage": "https://gitlab.com/codeboilerplates/nodejs#readme",
+  "dependencies": {
+    "@sendgrid/mail": "^7.0.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "googleapis": "^49.0.0",
+    "helmet": "^3.21.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.3",
+    "morgan": "^1.9.1",
+    "pg": "^7.18.2",
+    "rand-token": "^1.0.1",
+    "validator": "^12.2.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "nodemailer": "^6.4.6",
+    "nodemon": "^2.0.2"
+  }
+}

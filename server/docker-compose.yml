@@ -1,0 +1,30 @@
+version: "3.7"
+
+services:
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "30001:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test
+      PGADMIN_DEFAULT_PASSWORD: test
+    logging:
+      driver: none
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpass
+      POSTGRES_DB: bookstore
+      TZ: Europe/Bucharest
+      PGTZ: Europe/Bucharest
+    ports:
+      - "54621:5432"
+    volumes:
+      - lab5_pgdb:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+
+volumes:
+  lab5_pgdb:

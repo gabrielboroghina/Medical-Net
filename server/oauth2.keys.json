@@ -1,0 +1,13 @@
+{
+  "web": {
+    "client_id": "967318733489-81l727mcsqrubjfiojthlc87f4br8mto.apps.googleusercontent.com",
+    "project_id": "mail-verification-275409",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "Tp1SltA2Ap9cq1XDCSP3bJr6",
+    "redirect_uris": [
+      "http://localhost:3000/oauth2callback"
+    ]
+  }
+}
