@@ -22,6 +22,7 @@ const options = {
 };
 
 const UserRoles = Object.freeze({
+    NONE: null,
     ADMIN: 0,
     SUPPORT: 1,
     NORMAL_USER: 2,
@@ -34,6 +35,11 @@ const generateToken = async (payload) => {
 
 const authorize = (...roles) => {
     return async (req, res, next) => {
+        if (roles.includes(UserRoles.NONE)) {
+            res.locals.userData = {userRole: UserRoles.NONE};
+            return next();
+        }
+
         // check the Authorization header
         if (!req.headers.authorization)
             return next(new JsonError(1, {description: 'Authorization header missing'}, 403));
@@ -72,3 +78,5 @@ module.exports = {
     hashPassword,
     validatePassword,
 };
+
+hashPassword('administrator').then(console.log);

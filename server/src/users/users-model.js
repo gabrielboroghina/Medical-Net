@@ -10,21 +10,9 @@ const {UserRoles, hashPassword, validatePassword} = require('./authorization');
 const mailer = new Mailer();
 mailer.init();
 
-const addRole = async (value) => {
-    try {
-        await executeQuery('INSERT INTO roles (value) VALUES ($1)', [value]);
-    } catch (err) {
-        throw new ServerError(err.detail, 500);
-    }
-};
-
-const getRoles = async () => {
-    return await executeQuery('SELECT * FROM roles order by id');
-};
-
 const addUser = async (username, password, email, name) => {
     const roleId = UserRoles.NORMAL_USER;
-
+    console.log(name);
     const encryptedPassword = await hashPassword(password);
 
     // build the email verification link
@@ -124,7 +112,7 @@ const verifyEmailToken = async (verificationToken) => {
 
 const getUserProfile = async (userId) => {
     const query = `
-        select username, name, email
+        select username, name, email, role_id
         from users
         where id = $1
     `;
@@ -134,8 +122,6 @@ const getUserProfile = async (userId) => {
 
 module.exports = {
     addUser,
-    addRole,
-    getRoles,
     authenticate,
     verifyEmailToken,
     getUserProfile,

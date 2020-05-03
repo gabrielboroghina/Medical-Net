@@ -14,16 +14,18 @@ import {
     MessageBarType,
     getTheme, mergeStyleSets
 } from 'office-ui-fabric-react';
+import {useCookies} from "react-cookie";
 
 
 const Faq = () => {
     const {palette} = getTheme();
+    const [cookies] = useCookies(['user_profile']);
 
     return (
         <div className={style.flexContainer} style={{height: "auto", minHeight: "100%"}}>
             <div className={style.content} style={{backgroundColor: palette.white}}>
                 <Stack tokens={{childrenGap: 10}}>
-                    <QuestionForm/>
+                    {cookies['user_profile'] && <QuestionForm/>}
                     <FaqGroupedList/>
                 </Stack>
             </div>
@@ -100,7 +102,7 @@ const FaqGroupedList = () => {
     async function fetchData() {
         // fetch messages data from server
         const messages = (await bridge.getMessages()).data;
-        console.log(messages);
+
         setData({
             items: messages,
             groups: messages.map((msg, idx) => ({

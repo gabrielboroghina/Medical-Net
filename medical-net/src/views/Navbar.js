@@ -5,23 +5,18 @@ import {Link, useHistory} from 'react-router-dom';
 
 import {
     Stack, Text,
-    Persona, PersonaSize, Callout, DefaultButton, ActionButton, CommandBarButton,
+    Persona, PersonaSize, ActionButton, CommandBarButton,
     initializeIcons, ContextualMenuItemType,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
-import {useConst, useConstCallback} from '@uifabric/react-hooks';
 import {useCookies} from "react-cookie";
 
 
 initializeIcons();
 
 const Navbar = props => {
-    const [showCallout, setShowCallout] = React.useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
     const history = useHistory();
-
-    const onShowCallout = useConstCallback(() => setShowCallout(true));
-    const onHideCallout = useConstCallback(() => setShowCallout(false));
 
     const signOut = () => {
         removeCookie('access_token');
@@ -40,7 +35,7 @@ const Navbar = props => {
         secondaryText: props.user.email,
     } : null;
 
-    const menuItems = useConst([
+    const menuItems = [
         {
             key: 'divider_1',
             itemType: ContextualMenuItemType.Divider,
@@ -56,9 +51,9 @@ const Navbar = props => {
             text: 'Sign out',
             onClick: signOut
         },
-    ]);
+    ];
 
-    const renderMenuList = useConstCallback((menuListProps, defaultRender) => {
+    const renderMenuList = (menuListProps, defaultRender) => {
         return (
             <>
                 <div className={style.accountBox}>
@@ -68,13 +63,13 @@ const Navbar = props => {
                 {defaultRender(menuListProps)}
             </>
         );
-    });
+    };
 
-    const menuProps = useConst({
+    const menuProps = {
         shouldFocusOnMount: true,
         items: menuItems,
         onRenderMenuList: renderMenuList,
-    });
+    };
 
     return (
         <div className={style.nav} style={{boxShadow: Depths.depth16}}>
@@ -110,12 +105,6 @@ const Navbar = props => {
                             </ActionButton>
                         </Link>
                 }
-
-                {showCallout && (
-                    <Callout setInitialFocus={true} onDismiss={onHideCallout}>
-                        <DefaultButton onClick={onHideCallout} text="Hello Popup"/>
-                    </Callout>
-                )}
             </Stack>
         </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.scss';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
 import {useCookies} from 'react-cookie';
@@ -10,6 +10,7 @@ import {Footer} from "./views/Footer";
 import {GDPRModal} from "./views/gdprModal";
 import LoginPanel from "./views/login";
 import Faq from "./views/faq";
+import NotFound from "./views/not-found";
 import MessagesManagementBoard from "./views/support-dashboard";
 
 
@@ -41,13 +42,31 @@ const customTheme = createTheme({
 });
 loadTheme(customTheme);
 
+const ProtectedRoute = ({children, allowedRoles, ...rest}) => {
+    const [cookies] = useCookies(['user_profile']);
+    const userProfile = cookies['user_profile'];
+
+    return (
+        <Route {...rest}
+               render={({location}) =>
+                   userProfile && allowedRoles.includes(userProfile.role_id)
+                       ? (children)
+                       : (<Redirect
+                           to={{
+                               pathname: "/not-found",
+                               state: {from: location}
+                           }}
+                       />)
+               }
+        />
+    );
+};
+
 const App = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
+    const [cookies] = useCookies(['user_profile']);
 
     // get session information
     const cookieConsent = cookies['cookie_consent'];
-
-    const accessToken = cookies['access_token'];
     const userProfile = cookies['user_profile'];
 
     return (
@@ -55,12 +74,17 @@ const App = () => {
             <Navbar user={userProfile}/>
 
             <Switch>
+                <Route path="/not-found" component={NotFound}/>
                 <Route path="/login" component={LoginPanel}/>
                 <Route path="/register" component={RegisterBox}/>
-                <Route path="/doctors" component={Doctors}/>
+                <ProtectedRoute path="/doctors" allowedRoles={[0, 1, 2]}>
+                    <Doctors/>
+                </ProtectedRoute>
                 <Route path="/emailconfirmed" component={EmailConfirm}/>
                 <Route path="/faq" component={Faq}/>
-                <Route path="/support-dashboard" component={MessagesManagementBoard}/>
+                <ProtectedRoute path="/support-dashboard" allowedRoles={[0, 1]}>
+                    <MessagesManagementBoard/>
+                </ProtectedRoute>
             </Switch>
             <Footer/>
             <GDPRModal show={!cookieConsent}/>

@@ -9,7 +9,7 @@ import {
     CommandBar, Icon, List,
     MessageBarType, MessageBar,
     TextField, Stack, PrimaryButton, IconButton, Toggle,
-    getTheme, mergeStyleSets, getFocusStyle, Separator,
+    getTheme, mergeStyleSets, getFocusStyle,
 } from 'office-ui-fabric-react';
 import {Depths} from "@uifabric/fluent-theme/lib/fluent/FluentDepths";
 

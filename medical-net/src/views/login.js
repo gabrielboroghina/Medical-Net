@@ -19,7 +19,7 @@ const LoginPanel = props => {
     const {palette} = getTheme();
     const [err, setErr] = useState("");
     const history = useHistory();
-    const [cookies, setCookie, removeCookie] = useCookies([]);
+    const [cookies, setCookie] = useCookies([]);
 
     const authenticateUser = async () => {
         const authData = {
@@ -35,8 +35,8 @@ const LoginPanel = props => {
             // successful authentication; redirect the user
             history.push('/');
         } catch (err) {
-            const response = err.response.data;
-            setErr(response.description);
+            const response = err.response;
+            setErr(response ? response.data.description : "There was an error processing your request");
         }
     };
 
@@ -48,9 +48,11 @@ const LoginPanel = props => {
                     <form>
                         <Stack tokens={{childrenGap: 20}}>
                             <TextField label="Username:" id="field-user"
-                                       underlined autoComplete="username"/>
+                                       underlined autoComplete="username"
+                            />
                             <TextField label="Password:" id="field-pass" type="password"
-                                       underlined autoComplete="current-password" errorMessage={err}/>
+                                       underlined autoComplete="current-password" errorMessage={err}
+                            />
                             <Link className={style.smallLink} to="/register" style={{color: palette.themePrimary}}>
                                 Don't have an account?
                             </Link>

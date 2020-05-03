@@ -6,15 +6,16 @@ const messagesModel = require('./messages-model');
 
 const router = express.Router();
 
-router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER), async (req, res, next) => {
-    const userData = res.locals.userData;
-    try {
-        const data = await messagesModel.getAll(userData.userRole === UserRoles.NORMAL_USER);
-        res.status(200).json(data);
-    } catch (err) {
-        next(err);
-    }
-});
+router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.NONE),
+    async (req, res, next) => {
+        const userData = res.locals.userData;
+        try {
+            const data = await messagesModel.getAll([UserRoles.NORMAL_USER, UserRoles.NONE].includes(userData.userRole));
+            res.status(200).json(data);
+        } catch (err) {
+            next(err);
+        }
+    });
 
 router.post('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER), async (req, res, next) => {
     const data = req.body;
