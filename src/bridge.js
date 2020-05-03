@@ -35,10 +35,10 @@ async function sendMessage(data) {
     );
 }
 
-async function setMessageResponse(msgId, response) {
+async function updateMessage(msgId, newProps) {
     await axios.put(
         `${config.apiUrl}/messages/${msgId}`,
-        {response: response},
+        newProps,
         {headers: {'Content-Type': 'application/json'}}
     );
 }
@@ -48,5 +48,5 @@ export default {
     login,
     getMessages,
     sendMessage,
-    setMessageResponse,
+    updateMessage,
 };

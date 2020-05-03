@@ -8,7 +8,8 @@ import {
     Text,
     CommandBar, Icon, List,
     MessageBarType, MessageBar,
-    getTheme, mergeStyleSets, getFocusStyle, TextField, Stack, PrimaryButton, IconButton,
+    TextField, Stack, PrimaryButton, IconButton, Toggle,
+    getTheme, mergeStyleSets, getFocusStyle, Separator,
 } from 'office-ui-fabric-react';
 import {Depths} from "@uifabric/fluent-theme/lib/fluent/FluentDepths";
 
@@ -75,10 +76,14 @@ const classNames = mergeStyleSets({
 
 const EditBox = props => {
     const [sendingError, setSendingError] = useState(null);
+    let isImportant = props.item.important;
 
     const setMessageResponse = () => {
-        const response = document.getElementById("field-response").value;
-        bridge.setMessageResponse(props.item.id, response)
+        const newProps = {
+            response: document.getElementById("field-response").value,
+            important: isImportant,
+        };
+        bridge.updateMessage(props.item.id, newProps)
             .then(() => {
                 // return to the messages list (updated)
                 props.doneCallback(true);
@@ -90,10 +95,19 @@ const EditBox = props => {
 
     return (
         <div className="slide">
-            <IconButton iconProps={{iconName: "ChromeBack"}} title="Back" ariaLabel="Back"
-                        onClick={() => props.doneCallback(false)}
-                        style={{marginTop: 15, marginLeft: 5}}
-            />
+            <div className={style.leftRight}>
+                <IconButton iconProps={{iconName: "ChromeBack"}} title="Back" ariaLabel="Back"
+                            onClick={() => props.doneCallback(false)}
+                            style={{float: "left"}}
+                />
+                <div style={{float: "right"}}>
+                    <Toggle label="Important question" inlineLabel
+                            defaultChecked={props.item.important}
+                            onChange={(e, checked) => isImportant = checked}
+                    />
+                </div>
+                <div style={{clear: "both"}}/>
+            </div>
             <Stack className={style.msgEditBox} tokens={{childrenGap: 15}}>
                 <div>
                     <h3>Edit the response to the user's question</h3>
@@ -203,7 +217,7 @@ const MessagesManagementBoard = () => {
                     <div className={style.description}>{item.message}</div>
                 </div>
 
-                <Icon className={style.icon} iconName={'Edit'}/>
+                {item.important && <Icon className={style.icon} iconName={'Important'}/>}
             </div>
         );
     };
