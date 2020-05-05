@@ -79,4 +79,4 @@ module.exports = {
     validatePassword,
 };
 
-hashPassword('administrator').then(console.log);
+// hashPassword('administrator').then(console.log);

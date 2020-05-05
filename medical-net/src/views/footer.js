@@ -5,7 +5,7 @@ import {strings} from '../strings';
 import {Link} from "office-ui-fabric-react";
 
 
-export const Footer = () => {
+const Footer = () => {
     const {palette} = getTheme();
 
     return (
@@ -29,3 +29,5 @@ export const Footer = () => {
         </div>
     );
 };
+
+export default Footer;

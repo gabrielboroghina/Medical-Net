@@ -7,7 +7,7 @@ import {
     PrimaryButton, DefaultButton, Checkbox
 } from "office-ui-fabric-react";
 
-export const GDPRModal = props => {
+const GDPRModal = props => {
     const [hidden, setHidden] = useState(!props.show);
     const [cookies, setCookie] = useCookies();
 
@@ -45,3 +45,5 @@ export const GDPRModal = props => {
         </Dialog>
     )
 };
+
+export default GDPRModal;

@@ -45,6 +45,7 @@ const authenticate = async (username, password) => {
         SELECT u.id, u.password, u.role_id
         FROM users u
         WHERE u.username = $1
+           or u.email = $1
     `;
     const result = await executeQuery(query, [username]);
     if (result.length === 0) {
@@ -79,7 +80,8 @@ const sendValidationEmail = async (email, verificationToken) => {
           text-align: center;
           text-decoration: none;
           display: inline-block;
-          font-size: 16px;">Confirm Email</a>`;
+          font-size: 16px;
+          ">Confirm Email</a>`;
 
     await mailer.sendMail(email, mailSubject, mailBody);
 };

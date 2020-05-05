@@ -65,10 +65,31 @@ async function updateMessage(msgId, newProps) {
     );
 }
 
+async function getDoctors() {
+    const result = await axios.get(`${config.apiUrl}/doctors`,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        });
+    return result.data;
+}
+
+async function deleteDoctor(id) {
+    await axios.delete(`${config.apiUrl}/doctors/${id}`,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        });
+}
+
 export default {
     register,
     login,
     getMessages,
     sendMessage,
     updateMessage,
+    getDoctors,
+    deleteDoctor,
 };

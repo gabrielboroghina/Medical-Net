@@ -1,14 +1,5 @@
 @import '~office-ui-fabric-core/src/sass/variables/Color.Variables';
 
-.logo {
-  display: flex;
-
-  img {
-    margin: auto;
-    padding-left: 2%;
-  }
-}
-
 .nav {
   background-color: white;
 
@@ -17,13 +8,51 @@
   z-index: 1000;
   width: 100%;
   height: 50px;
-
   padding-left: 20px;
+
+  display: flex;
+  align-items: center;
+
+  .logo {
+    display: inline-block;
+    margin-left: 20px;
+
+    img {
+      margin: auto;
+      padding-left: 2%;
+    }
+  }
+
+  .navMenu {
+    display: flex;
+    align-items: center;
+
+    margin: 0 16px;
+  }
+
+  .hamburgerMenu {
+    display: none;
+  }
+
+  @media screen and (max-width: 800px) {
+    .navMenu {
+      display: none;
+    }
+
+    .logo {
+      margin: 0;
+    }
+
+    .hamburgerMenu {
+      display: block;
+    }
+  }
 
   .verticalSeparator {
     width: 1px;
     height: 30px;
     background-color: black;
+    margin: auto 0;
   }
 
   .stack {
@@ -31,9 +60,6 @@
     z-index: 1001;
     height: 100%;
     right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
   }
 
   .link {
@@ -47,11 +73,13 @@
       }
     }
   }
-
-  & > * {
-    margin: auto 0;
-  }
 }
+
+//@media screen and (max-width: 800px) {
+//  .nav {
+//    justify-content: center;
+//  }
+//}
 
 .smallLink {
   font-size: small;
@@ -59,7 +87,7 @@
 }
 
 .personaBtn {
-  padding: 0 30px 0 10px;
+  padding: 0 25px 0 10px;
   height: 100%;
 }
 
@@ -263,3 +291,34 @@
   padding: 0 10px 10px 10px;
   border-bottom: 1px solid #ccc;
 }
+
+.cardDetails {
+  box-sizing: border-box;
+  padding: 0 5px 10px 5px;
+}
+
+.modal {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  max-width: 600px;
+
+  .body {
+    flex: 4 4 auto;
+    padding: 16px 24px 24px 24px;
+    overflow-y: hidden;
+
+    p {
+      margin: 14px 0;
+    }
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+

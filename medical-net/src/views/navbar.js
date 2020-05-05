@@ -6,7 +6,7 @@ import {Link, useHistory} from 'react-router-dom';
 import {
     Stack, Text,
     Persona, PersonaSize, ActionButton, CommandBarButton,
-    initializeIcons, ContextualMenuItemType,
+    initializeIcons, ContextualMenuItemType, IconButton,
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 import {useCookies} from "react-cookie";
@@ -17,6 +17,8 @@ initializeIcons();
 const Navbar = props => {
     const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
     const history = useHistory();
+
+    const userProfile = cookies['user_profile'];
 
     const signOut = () => {
         removeCookie('access_token');
@@ -65,23 +67,62 @@ const Navbar = props => {
         );
     };
 
-    const menuProps = {
+    const personaMenu = {
         shouldFocusOnMount: true,
         items: menuItems,
         onRenderMenuList: renderMenuList,
     };
 
+    const menuProps = {
+        items: [
+            {
+                key: 'link0',
+                text: 'Home',
+                onClick: () => {
+                    history.push('/')
+                }
+            },
+            {
+                key: 'link1',
+                text: 'Doctors',
+                onClick: () => {
+                    history.push('/doctors')
+                }
+            },
+            {
+                key: 'link2',
+                text: 'FAQ',
+                onClick: () => {
+                    history.push('/faq')
+                }
+            },
+        ],
+        directionalHintFixed: true,
+    };
+
     return (
         <div className={style.nav} style={{boxShadow: Depths.depth16}}>
-            <Stack className={style.nav} horizontal tokens={{childrenGap: 20}}>
-                <div className={style.logo}>
-                    <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
-                </div>
-
+            <IconButton className={style.hamburgerMenu}
+                        iconProps={{iconName: "GlobalNavButton"}}
+                        menuProps={menuProps}
+                        onRenderMenuIcon={() => {
+                        }}
+                        style={{height: "100%"}}
+            />
+            <div className={style.logo}>
+                <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
+            </div>
+            <Stack className={style.navMenu} horizontal tokens={{childrenGap: 20}}>
                 <div className={style.verticalSeparator}/>
-                <Link className={style.link} to={"/doctors"}>
-                    <Text variant={"mediumPlus"}>Doctors</Text>
+                <Link className={style.link} to={"/"}>
+                    <Text variant={"mediumPlus"}>Home</Text>
                 </Link>
+                {
+                    userProfile &&
+                    <Link className={style.link} to={"/doctors"}>
+                        <Text variant={"mediumPlus"}>Doctors</Text>
+                    </Link>
+                }
                 <Link className={style.link} to={"/faq"}>
                     <Text variant={"mediumPlus"}>FAQ</Text>
                 </Link>
@@ -91,11 +132,14 @@ const Navbar = props => {
                 {
                     props.user
                         ?
-                        <CommandBarButton className={style.personaBtn} menuProps={menuProps}>
+                        <CommandBarButton className={style.personaBtn}
+                                          menuProps={personaMenu}
+                                          onRenderMenuIcon={() => {
+                                          }}
+                        >
                             <Persona{...persona}
                                     size={PersonaSize.size32}
                                     hidePersonaDetails={false}
-                                    imageAlt=""
                             />
                         </CommandBarButton>
                         :
