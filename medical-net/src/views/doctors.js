@@ -28,74 +28,6 @@ import {useCookies} from "react-cookie";
 
 const {palette} = getTheme();
 
-const _items = [
-    {
-        key: 'newItem',
-        text: 'New',
-        cacheKey: 'myCacheKey', // changing this key will invalidate this item's cache
-        iconProps: {iconName: 'Add'},
-        subMenuProps: {
-            items: [
-                {
-                    key: 'emailMessage',
-                    text: 'Email message',
-                    iconProps: {iconName: 'Mail'},
-                },
-                {
-                    key: 'calendarEvent',
-                    text: 'Calendar event',
-                    iconProps: {iconName: 'Calendar'},
-                },
-            ],
-        },
-    },
-    {
-        key: 'upload',
-        text: 'Upload',
-        iconProps: {iconName: 'Upload'},
-        href: 'https://developer.microsoft.com/en-us/fluentui',
-    },
-    {
-        key: 'share',
-        text: 'Share',
-        iconProps: {iconName: 'Share'},
-        onClick: () => console.log('Share'),
-    },
-    {
-        key: 'download',
-        text: 'Download',
-        iconProps: {iconName: 'Download'},
-        onClick: () => console.log('Download'),
-    },
-];
-
-const _overflowItems = [
-    {key: 'move', text: 'Move to...', onClick: () => console.log('Move to'), iconProps: {iconName: 'MoveToFolder'}},
-    {key: 'copy', text: 'Copy to...', onClick: () => console.log('Copy to'), iconProps: {iconName: 'Copy'}},
-    {key: 'rename', text: 'Rename...', onClick: () => console.log('Rename'), iconProps: {iconName: 'Edit'}},
-];
-
-const _farItems = [
-    {
-        key: 'tile',
-        text: 'Grid view',
-        // This needs an ariaLabel since it's icon-only
-        ariaLabel: 'Grid view',
-        iconOnly: true,
-        iconProps: {iconName: 'Tiles'},
-        onClick: () => console.log('Tiles'),
-    },
-    {
-        key: 'info',
-        text: 'Info',
-        // This needs an ariaLabel since it's icon-only
-        ariaLabel: 'Info',
-        iconOnly: true,
-        iconProps: {iconName: 'Info'},
-        onClick: () => console.log('Info'),
-    },
-];
-
 const Card = props => {
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -103,7 +35,7 @@ const Card = props => {
         <>
             <DocumentCard
                 className={style.card}
-                styles={{width: props.width, boxShadow: Depths.depth4}}
+                styles={{boxShadow: Depths.depth4}}
                 onClick={() => setModalOpen(true)}
             >
                 <DocumentCardImage height={160} imageFit={ImageFit.contain} imageSrc={props.info.picture_url}/>
@@ -165,14 +97,14 @@ const DoctorModal = (props) => {
                onDismiss={props.onDismiss}
                isBlocking={false}
                containerClassName={style.modal}
+               allowTouchBodyScroll={true}
         >
             <div className={contentStyles.header}>
                 <span>{props.info.name}</span>
-                <IconButton
-                    styles={iconButtonStyles}
-                    iconProps={{iconName: "Cancel"}}
-                    ariaLabel="Close popup modal"
-                    onClick={props.onDismiss}
+                <IconButton styles={iconButtonStyles}
+                            iconProps={{iconName: "Cancel"}}
+                            ariaLabel="Close popup modal"
+                            onClick={props.onDismiss}
                 />
             </div>
             <div className={style.body}>
@@ -188,19 +120,14 @@ const DoctorModal = (props) => {
                 {
                     cookies['user_profile'] && cookies['user_profile'].role_id === 0 &&
                     <>
-                        <div style={{margin: "10px 0"}}>
-                            <Separator>Manage</Separator>
-                        </div>
-                        <DefaultButton iconProps={{iconName: "Delete"}}
-                                       onClick={deleteDoctor}
-                        >
-                            Delete doctor
+                        <div style={{margin: "10px 0"}}><Separator>Manage</Separator></div>
+                        <DefaultButton iconProps={{iconName: "Delete"}} onClick={deleteDoctor}>Delete
+                            doctor
                         </DefaultButton>
                         {
                             notification[0] &&
                             <div style={{marginTop: 10}}>
-                                <MessageBar messageBarType={notification[0]} isMultiline={true}
-                                >
+                                <MessageBar messageBarType={notification[0]} isMultiline={true}>
                                     {notification[1]}
                                 </MessageBar>
                             </div>
@@ -214,7 +141,7 @@ const DoctorModal = (props) => {
 };
 
 const ListGrid = (props) => {
-    const minCardWidth = 210;
+    const minCardWidth = 250;
     const ROWS_PER_PAGE = 3;
     let _columnCount, _columnWidth, _rowHeight;
 
@@ -255,8 +182,47 @@ const ListGrid = (props) => {
     );
 };
 
-const Doctors = () => {
-    const [doctors, setDoctors] = useState([]);
+const Doctors = (props) => {
+    const [[doctors, allDoctors], setDoctors] = useState([[], []]);
+    const [cmdBarItems, setCmdBarItems] = useState([]);
+
+    // let cmdBarItems = [
+    //     {
+    //         key: 'filter',
+    //         text: 'Filter',
+    //         iconProps: {iconName: 'Filter'},
+    //         subMenuProps: {
+    //             items: [
+    //                 {
+    //                     key: 'all',
+    //                     text: 'All specialties',
+    //                     onClick: () => setDoctors([allDoctors, allDoctors])
+    //                 },
+    //             ],
+    //         },
+    //     },
+    // ];
+
+    if (props.user.role_id === 0)
+        cmdBarItems.push({
+            key: 'newItem',
+            text: 'New',
+            iconProps: {iconName: 'Add'},
+            onClick: () => {
+            }
+        });
+
+    const cmdBarFarItems = [
+        {
+            key: 'info',
+            text: 'Info',
+            ariaLabel: 'Info',
+            iconOnly: true,
+            iconProps: {iconName: 'Info'},
+            onClick: () => {
+            },
+        },
+    ];
 
     async function fetchData() {
         // fetch doctors information from server
@@ -264,7 +230,33 @@ const Doctors = () => {
 
         for (const doctor of doctors)
             doctor.showDetails = false;
-        setDoctors(doctors);
+        setDoctors([doctors, doctors]);
+
+        // create filters in the command bar for each specialty
+        const specialtyFilters = [];
+        doctors.filter((value, index, self) => self.indexOf(value) === index)
+            .map(doctor => doctor.specialty)
+            .forEach(spec => specialtyFilters.push({
+                key: spec,
+                text: spec,
+                onClick: () => setDoctors([doctors.filter(item => item.specialty === spec), doctors])
+            }));
+
+        setCmdBarItems([{
+            key: 'filter',
+            text: 'Filter',
+            iconProps: {iconName: 'Filter'},
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'all',
+                        text: 'All specialties',
+                        onClick: () => setDoctors([doctors, doctors])
+                    },
+                    ...specialtyFilters
+                ],
+            },
+        }]);
     }
 
     useEffect(() => {
@@ -276,9 +268,8 @@ const Doctors = () => {
             <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
                 <CommandBar
                     style={{boxShadow: Depths.depth8}}
-                    items={_items}
-                    overflowItems={_overflowItems}
-                    farItems={_farItems}
+                    items={cmdBarItems}
+                    farItems={cmdBarFarItems}
                 />
                 <ListGrid items={doctors.map(doctor =>
                     <Card info={doctor}/>

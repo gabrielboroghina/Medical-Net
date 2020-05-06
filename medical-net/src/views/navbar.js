@@ -18,8 +18,6 @@ const Navbar = props => {
     const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
     const history = useHistory();
 
-    const userProfile = cookies['user_profile'];
-
     const signOut = () => {
         removeCookie('access_token');
         removeCookie('user_profile');
@@ -107,10 +105,9 @@ const Navbar = props => {
                         menuProps={menuProps}
                         onRenderMenuIcon={() => {
                         }}
-                        style={{height: "100%"}}
             />
             <div className={style.logo}>
-                <img src={require('../res/logo.png')} alt="MedicalNet logo" style={{height: 50}}/>
+                <img src={require('../res/logo.png')} alt="MedicalNet logo"/>
             </div>
             <Stack className={style.navMenu} horizontal tokens={{childrenGap: 20}}>
                 <div className={style.verticalSeparator}/>
@@ -118,7 +115,7 @@ const Navbar = props => {
                     <Text variant={"mediumPlus"}>Home</Text>
                 </Link>
                 {
-                    userProfile &&
+                    props.user &&
                     <Link className={style.link} to={"/doctors"}>
                         <Text variant={"mediumPlus"}>Doctors</Text>
                     </Link>
@@ -126,6 +123,12 @@ const Navbar = props => {
                 <Link className={style.link} to={"/faq"}>
                     <Text variant={"mediumPlus"}>FAQ</Text>
                 </Link>
+                {
+                    props.user && props.user.role_id === 1 &&
+                    <Link className={style.link} to={"/support-dashboard"}>
+                        <Text variant={"mediumPlus"}>Dashboard</Text>
+                    </Link>
+                }
             </Stack>
 
             <Stack className={style.stack} horizontal horizontalAlign="end">
@@ -137,14 +140,14 @@ const Navbar = props => {
                                           onRenderMenuIcon={() => {
                                           }}
                         >
-                            <Persona{...persona}
-                                    size={PersonaSize.size32}
-                                    hidePersonaDetails={false}
-                            />
+                            <Persona className={style.personaExtended} {...persona} size={PersonaSize.size32}
+                                     hidePersonaDetails={false}/>
+                            <Persona className={style.personaCompact} {...persona} size={PersonaSize.size32}
+                                     hidePersonaDetails={true}/>
                         </CommandBarButton>
                         :
                         <Link to={'/login'}>
-                            <ActionButton iconProps={{iconName: 'Signin'}} className={style.personaBtnSimple}>
+                            <ActionButton iconProps={{iconName: 'Signin'}} className={style.signinBtn}>
                                 Sign in
                             </ActionButton>
                         </Link>

@@ -78,10 +78,12 @@ const App = () => {
                 <Route path="/login" component={LoginPanel}/>
                 <Route path="/register" component={RegisterBox}/>
                 <ProtectedRoute path="/doctors" allowedRoles={[0, 1, 2]}>
-                    <Doctors/>
+                    <Doctors user={userProfile}/>
                 </ProtectedRoute>
                 <Route path="/emailconfirmed" component={EmailConfirm}/>
-                <Route path="/faq" component={Faq}/>
+                <Route path="/faq">
+                    <Faq user={userProfile}/>
+                </Route>
                 <ProtectedRoute path="/support-dashboard" allowedRoles={[0, 1]}>
                     <MessagesManagementBoard/>
                 </ProtectedRoute>

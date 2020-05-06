@@ -8,26 +8,17 @@
   z-index: 1000;
   width: 100%;
   height: 50px;
-  padding-left: 20px;
 
   display: flex;
   align-items: center;
 
   .logo {
-    display: inline-block;
-    margin-left: 20px;
-
-    img {
-      margin: auto;
-      padding-left: 2%;
-    }
+    margin: 0 15px;
   }
 
   .navMenu {
     display: flex;
     align-items: center;
-
-    margin: 0 16px;
   }
 
   .hamburgerMenu {
@@ -40,11 +31,19 @@
     }
 
     .logo {
+      position: absolute;
+      left: 50%;
       margin: 0;
+
+      img {
+        position: relative;
+        left: -50%;
+      }
     }
 
     .hamburgerMenu {
       display: block;
+      margin-left: 15px;
     }
   }
 
@@ -75,29 +74,40 @@
   }
 }
 
-//@media screen and (max-width: 800px) {
-//  .nav {
-//    justify-content: center;
-//  }
-//}
-
-.smallLink {
-  font-size: small;
-  text-decoration: none;
-}
-
 .personaBtn {
-  padding: 0 25px 0 10px;
+  padding: 0 10px 0 15px;
   height: 100%;
 }
 
-.personaBtnSimple {
+.personaCompact {
+  display: none;
+}
+
+.personaExtended {
+}
+
+@media screen and (max-width: 800px) {
+  .personaCompact {
+    display: block;
+  }
+
+  .personaExtended {
+    display: none;
+  }
+}
+
+.signinBtn {
   padding: 0 30px 0 10px;
   height: 100%;
 
   &:hover {
     background-color: $ms-color-neutralLighter;
   }
+}
+
+.smallLink {
+  font-size: small;
+  text-decoration: none;
 }
 
 .box {
@@ -142,6 +152,7 @@
 .card {
   display: inline-block;
   margin-bottom: 20px;
+  width: 250px;
 }
 
 .footer {
@@ -165,7 +176,7 @@
   flex-direction: column;
 
   box-sizing: border-box;
-  padding: 40px 30px;
+  padding: 20px 30px;
 
   background-color: white;
 }

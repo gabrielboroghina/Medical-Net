@@ -12,20 +12,24 @@ import {
     Stack,
     TextField,
     MessageBarType,
-    getTheme, mergeStyleSets
+    getTheme, mergeStyleSets, Separator
 } from 'office-ui-fabric-react';
-import {useCookies} from "react-cookie";
 
 
-const Faq = () => {
+const Faq = (props) => {
     const {palette} = getTheme();
-    const [cookies] = useCookies(['user_profile']);
 
     return (
         <div className={style.flexContainer} style={{height: "auto", minHeight: "100%"}}>
             <div className={style.content} style={{backgroundColor: palette.white}}>
                 <Stack tokens={{childrenGap: 10}}>
-                    {cookies['user_profile'] && <QuestionForm/>}
+                    {
+                        props.user &&
+                        <>
+                            <QuestionForm/>
+                            <Separator/>
+                        </>
+                    }
                     <FaqGroupedList/>
                 </Stack>
             </div>

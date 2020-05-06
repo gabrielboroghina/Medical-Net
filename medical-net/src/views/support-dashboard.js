@@ -9,31 +9,10 @@ import {
     CommandBar, Icon, List,
     MessageBarType, MessageBar,
     TextField, Stack, PrimaryButton, IconButton, Toggle,
-    getTheme, mergeStyleSets, getFocusStyle,
+    getTheme, mergeStyleSets, getFocusStyle, TeachingBubble,
 } from 'office-ui-fabric-react';
 import {Depths} from "@uifabric/fluent-theme/lib/fluent/FluentDepths";
-
-
-const _farItems = [
-    {
-        key: 'tile',
-        text: 'Grid view',
-        // This needs an ariaLabel since it's icon-only
-        ariaLabel: 'Grid view',
-        iconOnly: true,
-        iconProps: {iconName: 'Tiles'},
-        onClick: () => console.log('Tiles'),
-    },
-    {
-        key: 'info',
-        text: 'Info',
-        // This needs an ariaLabel since it's icon-only
-        ariaLabel: 'Info',
-        iconOnly: true,
-        iconProps: {iconName: 'Info'},
-        onClick: () => console.log('Info'),
-    },
-];
+import {useBoolean} from "@uifabric/react-hooks";
 
 const theme = getTheme();
 const {palette, semanticColors, fonts} = theme;
@@ -141,6 +120,7 @@ const MessagesManagementBoard = () => {
     const [[items, allItems], setItems] = useState([[], []]);
     const [filterText, setFilterText] = useState('');
     const [[editing, editingItem], setEditMode] = useState([false, null]);
+    const [teachingBubbleVisible, {toggle: toggleTeachingBubbleVisible}] = useBoolean(false);
 
     const cmdBarItems = [
         {
@@ -167,11 +147,17 @@ const MessagesManagementBoard = () => {
                 ],
             },
         },
+    ];
+
+    const cmdBarFarItems = [
         {
-            key: 'upload',
-            text: 'Upload',
-            iconProps: {iconName: 'Upload'},
-            href: 'https://developer.microsoft.com/en-us/fluentui',
+            id: 'infoBtn',
+            key: 'info',
+            text: 'Info',
+            ariaLabel: 'Info',
+            iconOnly: true,
+            iconProps: {iconName: 'Info'},
+            onClick: toggleTeachingBubbleVisible,
         },
     ];
 
@@ -210,14 +196,15 @@ const MessagesManagementBoard = () => {
                       style={{color: item.response ? 'green' : 'red'}}
                       iconName={item.response ? 'CheckboxCompositeReversed' : 'CheckboxFill'}
                 />
-
                 <div className={classNames.itemContent}>
                     <div className={classNames.itemName}>{item.subject}</div>
                     <div className={classNames.itemIndex}>{item.create_date}</div>
                     <div className={style.description}>{item.message}</div>
                 </div>
-
-                {item.important && <Icon className={style.icon} iconName={'Important'}/>}
+                {
+                    item.important &&
+                    <Icon className={style.icon} iconName={'Important'} aria-label={'Important question'}/>
+                }
             </div>
         );
     };
@@ -231,8 +218,19 @@ const MessagesManagementBoard = () => {
 
                 <CommandBar style={{boxShadow: Depths.depth8}}
                             items={cmdBarItems}
-                            farItems={_farItems}
+                            farItems={cmdBarFarItems}
                 />
+                {
+                    teachingBubbleVisible &&
+                    <TeachingBubble target="#infoBtn"
+                                    hasCondensedHeadline={true}
+                                    onDismiss={toggleTeachingBubbleVisible}
+                                    headline="Manage all the messages from here"
+                    >
+                        Click a message, and you'll be redirected to an edit page from where you may edit the message's
+                        response and importance
+                    </TeachingBubble>
+                }
 
                 <MessageBar messageBarType={MessageBarType.warning} isMultiline={false}>
                     {allItems.filter(item => !item.response).length} unresolved messages
