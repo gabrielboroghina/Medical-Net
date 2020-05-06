@@ -34,7 +34,7 @@ async function getMessages() {
     return await axios.get(`${config.apiUrl}/messages`,
         {
             headers: {
-                // 'Authorization': getToken(),
+                'Authorization': getToken(),
             }
         });
 }

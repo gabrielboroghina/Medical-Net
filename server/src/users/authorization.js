@@ -35,14 +35,14 @@ const generateToken = async (payload) => {
 
 const authorize = (...roles) => {
     return async (req, res, next) => {
-        if (roles.includes(UserRoles.NONE)) {
-            res.locals.userData = {userRole: UserRoles.NONE};
-            return next();
-        }
-
         // check the Authorization header
-        if (!req.headers.authorization)
+        if (!req.headers.authorization) {
+            if (roles.includes(UserRoles.NONE)) {
+                res.locals.userData = {userRole: UserRoles.NONE};
+                return next();
+            }
             return next(new JsonError(1, {description: 'Authorization header missing'}, 403));
+        }
 
         const token = req.headers.authorization.split(" ")[1];
 

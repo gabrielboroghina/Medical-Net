@@ -2,7 +2,7 @@ const {executeQuery} = require('../database');
 const {generateToken} = require('./authorization');
 const {ServerError, JsonError} = require('../utils/errors');
 const crypto = require('crypto');
-const {Mailer} = require('./mailer');
+const {Mailer} = require('../utils/mailer');
 const randtoken = require('rand-token');
 const {UserRoles, hashPassword, validatePassword} = require('./authorization');
 

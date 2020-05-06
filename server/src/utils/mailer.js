@@ -110,12 +110,4 @@ class Mailer {
     }
 }
 
-// main = async () => {
-//     const mailer = new Mailer();
-//     await mailer.init();
-//     await mailer.sendMail("gabib97@yahoo.com");
-// };
-//
-// main();
-
 module.exports = {Mailer};

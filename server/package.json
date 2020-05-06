@@ -6,7 +6,7 @@
   "scripts": {
     "start-prod": "node start.js",
     "start": "nodemon -r dotenv/config start.js",
-    "test-mail": "node -r dotenv/config src/users/mailer.js"
+    "test-mail": "node -r dotenv/config src/utils/mailer.js"
   },
   "repository": {
     "type": "git",
