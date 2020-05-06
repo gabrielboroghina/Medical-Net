@@ -82,13 +82,6 @@ const Navbar = props => {
             },
             {
                 key: 'link1',
-                text: 'Doctors',
-                onClick: () => {
-                    history.push('/doctors')
-                }
-            },
-            {
-                key: 'link2',
                 text: 'FAQ',
                 onClick: () => {
                     history.push('/faq')
@@ -97,6 +90,25 @@ const Navbar = props => {
         ],
         directionalHintFixed: true,
     };
+
+    if (props.user && [0, 1].includes(props.user.role_id))
+        menuProps.items = [
+            ...menuProps.items,
+            {
+                key: 'link2',
+                text: 'Doctors',
+                onClick: () => {
+                    history.push('/doctors')
+                }
+            },
+            {
+                key: 'link3',
+                text: 'Dashboard',
+                onClick: () => {
+                    history.push('/support-dashboard')
+                }
+            },
+        ];
 
     return (
         <div className={style.nav} style={{boxShadow: Depths.depth16}}>
@@ -107,7 +119,9 @@ const Navbar = props => {
                         }}
             />
             <div className={style.logo}>
-                <img src={require('../res/logo.png')} alt="MedicalNet logo"/>
+                <Link to={'/'}>
+                    <img src={require('../res/logo.png')} alt="MedicalNet logo"/>
+                </Link>
             </div>
             <Stack className={style.navMenu} horizontal tokens={{childrenGap: 20}}>
                 <div className={style.verticalSeparator}/>
@@ -124,7 +138,7 @@ const Navbar = props => {
                     <Text variant={"mediumPlus"}>FAQ</Text>
                 </Link>
                 {
-                    props.user && props.user.role_id === 1 &&
+                    props.user && [0, 1].includes(props.user.role_id) &&
                     <Link className={style.link} to={"/support-dashboard"}>
                         <Text variant={"mediumPlus"}>Dashboard</Text>
                     </Link>

@@ -97,7 +97,7 @@
 }
 
 .signinBtn {
-  padding: 0 30px 0 10px;
+  padding: 0 10px 0 10px;
   height: 100%;
 
   &:hover {
@@ -131,6 +131,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  overflow-x: hidden;
 }
 
 .listGridTile {
@@ -173,7 +175,6 @@
 }
 
 .content {
-  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -184,7 +185,6 @@
 }
 
 .homeContent {
-  //height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -275,12 +275,12 @@ img {
 }
 
 .flexContainer {
+  flex: 1 0 auto;
   box-sizing: border-box;
   margin: 30px auto 0 auto;
   padding: 50px 0;
 
   width: 70%;
-  height: 100%;
 
   display: flex;
   flex-direction: column;
@@ -327,6 +327,7 @@ img {
 .scrollablePane {
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .msgIcon {
@@ -336,7 +337,7 @@ img {
 }
 
 .msgEditBox {
-  padding: 0 35px;
+  padding: 0 35px 15px 35px;
 }
 
 .widthLimit {

@@ -20,7 +20,7 @@ const Faq = (props) => {
     const {palette} = getTheme();
 
     return (
-        <div className={style.flexContainer} style={{height: "auto", minHeight: "100%"}}>
+        <div className={style.flexContainer}>
             <div className={style.content} style={{backgroundColor: palette.white}}>
                 <Stack tokens={{childrenGap: 10}}>
                     {

@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {useState, useEffect} from 'react';
 import style from "../style.module.scss";
 
-
 import {
-    PrimaryButton,
-    Text,
-    Stack,
-    getTheme, Image, ImageFit, FontIcon
+    getTheme, FontIcon
 } from 'office-ui-fabric-react';
 import {Depths} from "@uifabric/fluent-theme";
 
@@ -18,7 +13,7 @@ const Home = (props) => {
     return (
         <div className={style.flexContainer}>
             <div className={style.homeContent} style={{backgroundColor: palette.neutralLighter}}>
-                <img src={require('../res/record3.png')} alt=""/>
+                <img src={require('../res/record4.jpg')} alt=""/>
 
                 <div className={style.heading}>
                     <h3>One platform. All your medical history, securely accessible from everywhere</h3>

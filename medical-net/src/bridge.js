@@ -9,7 +9,7 @@ function getToken() {
 
     if (token.length)
         return `Bearer ${token[0][1]}`;
-    throw new Error("Not authenticated");
+    return null;
 }
 
 async function register(data) {
@@ -31,11 +31,13 @@ async function login(data) {
 }
 
 async function getMessages() {
+    const token = getToken();
+
     return await axios.get(`${config.apiUrl}/messages`,
         {
-            headers: {
-                'Authorization': getToken(),
-            }
+            headers: token
+                ? {'Authorization': getToken()}
+                : {}
         });
 }
 
