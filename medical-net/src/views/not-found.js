@@ -10,7 +10,7 @@ const NotFound = () => {
     return (
         <div className={style.flexContainer}>
             <div className={style.box} style={{boxShadow: Depths.depth4}}>
-                <Stack className="slide" tokens={{childrenGap: 20}}>
+                <Stack className="slideLeft" tokens={{childrenGap: 20}}>
                     <h2>404 Not Found</h2>
                     <Text variant={'medium'} block>
                         The page you are trying to access cannot be found.

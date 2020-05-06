@@ -43,7 +43,7 @@ const LoginPanel = props => {
     return (
         <div className={style.flexContainer}>
             <div className={style.box} style={{boxShadow: Depths.depth4}}>
-                <Stack className="slide" tokens={{childrenGap: 20}}>
+                <Stack className="slideLeft" tokens={{childrenGap: 20}}>
                     <h2>Sign In</h2>
                     <form>
                         <Stack tokens={{childrenGap: 20}}>

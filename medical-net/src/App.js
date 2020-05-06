@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.scss';
 import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
@@ -12,7 +11,8 @@ import LoginPanel from "./views/login";
 import Faq from "./views/faq";
 import NotFound from "./views/not-found";
 import MessagesManagementBoard from "./views/support-dashboard";
-
+import Home from "./views/home";
+import './App.scss';
 
 const customTheme = createTheme({
     palette: {
@@ -87,6 +87,7 @@ const App = () => {
                 <ProtectedRoute path="/support-dashboard" allowedRoles={[0, 1]}>
                     <MessagesManagementBoard/>
                 </ProtectedRoute>
+                <Home/>
             </Switch>
             <Footer/>
             <GDPRModal show={!cookieConsent}/>

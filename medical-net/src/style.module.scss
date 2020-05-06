@@ -122,7 +122,7 @@
   overflow: hidden;
 }
 
-.slide {
+.slideLeft {
   animation-name: ms-motion-slideLeftIn;
   animation-duration: 0.5s;
 }
@@ -156,6 +156,7 @@
 }
 
 .footer {
+  flex-shrink: 0;
   width: 100%;
   display: flex;
   padding-bottom: 10px;
@@ -172,6 +173,7 @@
 }
 
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -179,6 +181,79 @@
   padding: 20px 30px;
 
   background-color: white;
+}
+
+.homeContent {
+  //height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-sizing: border-box;
+  padding: 10px 0;
+
+  background-color: white;
+
+  .card {
+    width: 90%;
+    max-width: 350px;
+    height: auto;
+
+    box-sizing: border-box;
+    padding: 20px 30px 10px 30px;
+
+    margin: 20px auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .icon {
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+    margin: 0 25px;
+
+    color: #ae4f5d;
+  }
+
+  .heading {
+    text-align: center;
+    padding: 0 20px;
+  }
+}
+
+
+/* Create two equal columns that floats next to each other */
+.col {
+  box-sizing: border-box;
+  float: left;
+  width: 50%;
+
+  display: flex;
+  justify-content: center;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col {
+    width: 100%;
+  }
+}
+
+img {
+  margin: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .groupListHeader {
@@ -200,11 +275,13 @@
 }
 
 .flexContainer {
+  box-sizing: border-box;
   margin: 30px auto 0 auto;
   padding: 50px 0;
-  box-sizing: border-box;
+
   width: 70%;
   height: 100%;
+
   display: flex;
   flex-direction: column;
 }
@@ -332,4 +409,3 @@
     }
   }
 }
-

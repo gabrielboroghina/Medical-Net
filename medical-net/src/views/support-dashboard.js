@@ -73,7 +73,7 @@ const EditBox = props => {
     };
 
     return (
-        <div className="slide">
+        <div className="slideLeft">
             <div className={style.leftRight}>
                 <IconButton iconProps={{iconName: "ChromeBack"}} title="Back" ariaLabel="Back"
                             onClick={() => props.doneCallback(false)}

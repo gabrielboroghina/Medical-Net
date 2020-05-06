@@ -35,7 +35,7 @@ const EmailConfirm = () => {
     return (
         <div className={style.flexContainer}>
             <div className={style.box} style={{boxShadow: Depths.depth4}}>
-                <Stack className="slide" tokens={{childrenGap: 20}}>
+                <Stack className="slideLeft" tokens={{childrenGap: 20}}>
                     <h2>Email confirmed</h2>
                     <Text variant={'medium'} block>
                         Your account was successfully validated.
@@ -124,7 +124,7 @@ function RegisterBox() {
     return (
         <div className={style.flexContainer}>
             <div className={style.box} style={{boxShadow: Depths.depth4}}>
-                <Stack className="slide" tokens={{childrenGap: 20}}>
+                <Stack className="slideLeft" tokens={{childrenGap: 20}}>
                     {
                         registrationState === RegistrationStates.EMAIL_CONFIRM
                             ? <ValidateEmailBox/>
