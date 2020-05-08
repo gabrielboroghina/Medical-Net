@@ -39,10 +39,8 @@ const Card = props => {
             >
                 <DocumentCardImage height={160} imageFit={ImageFit.contain} imageSrc={props.info.doctor.picture_url}/>
                 <DocumentCardTitle title={props.info.doctor.name} shouldTruncate/>
-                <DocumentCardLocation
-                    location={props.info.hospitals.filter(h => h.id === props.info.doctor.workplace)[0].name}/>
-                <DocumentCardStatus statusIcon="medical"
-                                    status={props.info.specialties.filter(spec => spec.id === props.info.doctor.specialty)[0].name}/>
+                <DocumentCardLocation location={props.info.doctor.workplace}/>
+                <DocumentCardStatus statusIcon="medical" status={props.info.doctor.specialty}/>
 
                 <Rating style={{textAlign: "right", marginRight: 10}} id="small"
                         min={1} max={5} rating={(props.info.doctor.rating - 7) / 3 * 5} readOnly
@@ -59,12 +57,12 @@ const DoctorModal = (props) => {
     const theme = getTheme();
     const [notification, setNotification] = useState([null, null]);
     const [selectedSpec, setSelectedSpec] = useState([
-        props.info.doctor.specialty,
-        props.info.specialties.filter(spec => spec.id === props.info.doctor.specialty)[0].name
+        props.info.doctor.specialty_id,
+        props.info.doctor.specialty
     ]);
     const [selectedWorkplace, setSelectedWorkplace] = useState([
-        props.info.doctor.workplace,
-        props.info.hospitals.filter(h => h.id === props.info.doctor.workplace)[0].name
+        props.info.doctor.workplace_id,
+        props.info.workplace
     ]);
 
     const onChangeSpecialty = useCallback((ev, option, index, value) =>
@@ -106,8 +104,8 @@ const DoctorModal = (props) => {
         });
     };
 
-    const updateDoctorInfo = () => {
-        const newDetails = {
+    const save = () => {
+        const info = {
             name: document.getElementById("field-name").value,
             title: document.getElementById("field-title").value,
             specialty: selectedSpec[0] || selectedSpec[1],
@@ -117,12 +115,21 @@ const DoctorModal = (props) => {
             rating: document.getElementById("field-rating").childNodes[0].value,
         };
 
-        bridge.updateDoctorInfo(props.info.doctor.id, newDetails).then(() => {
-            setNotification([MessageBarType.success, 'Doctor\'s details were updated']);
+        const successCallback = () => {
+            setNotification([
+                MessageBarType.success,
+                props.newItem ? 'The entry was succesfuly registered' : 'Doctor\'s details were updated'
+            ]);
             props.updateCallback(); // update the data in the main page (doctor cards)
-        }).catch(() => {
+        };
+        const failureCallback = () => {
             setNotification([MessageBarType.severeWarning, 'There was an error processing your request']);
-        });
+        };
+
+        if (props.newItem)
+            bridge.addDoctor(info).then(successCallback, failureCallback);
+        else
+            bridge.updateDoctorInfo(props.info.doctor.id, info).then(successCallback, failureCallback);
     };
 
     return (
@@ -136,7 +143,8 @@ const DoctorModal = (props) => {
             <div className={contentStyles.header}>
                 {
                     props.user.role_id === 0
-                        ? <TextField id="field-name" label="Name:" underlined defaultValue={props.info.doctor.name}/>
+                        ?
+                        <TextField id="field-name" label="Name:" underlined defaultValue={props.info.doctor.name}/>
                         : <span>{props.info.doctor.name}</span>
                 }
                 <IconButton styles={iconButtonStyles}
@@ -158,7 +166,10 @@ const DoctorModal = (props) => {
                                           text={selectedSpec[1]}
                                           selectedKey={selectedSpec[0]}
                                           onChange={onChangeSpecialty}
-                                          options={props.info.specialties.map(spec => ({key: spec.id, text: spec.name}))}
+                                          options={props.info.specialties.map(spec => ({
+                                              key: spec.id,
+                                              text: spec.name
+                                          }))}
                                 />
                             </div>
                             <div style={{display: "flex"}}>
@@ -172,7 +183,7 @@ const DoctorModal = (props) => {
                             </div>
                         </Stack>
                         : <Text variant={"mediumPlus"}>
-                            {props.info.doctor.title} <b>{props.info.doctor.specialty}</b> - {props.info.doctor.workplace}
+                            {props.info.doctor.title} - <b>{props.info.doctor.specialty}</b> - {props.info.doctor.workplace}
                         </Text>
                 }
 
@@ -208,8 +219,8 @@ const DoctorModal = (props) => {
                     <>
                         <div style={{paddingBottom: 10}}/>
                         <Stack horizontal tokens={{childrenGap: 20}}>
-                            <PrimaryButton iconProps={{iconName: "Save"}} onClick={updateDoctorInfo}>
-                                Update information
+                            <PrimaryButton iconProps={{iconName: "Save"}} onClick={save}>
+                                {props.newItem ? "Add doctor" : "Update"}
                             </PrimaryButton>
                             <DefaultButton iconProps={{iconName: "Delete"}} onClick={deleteDoctor}>
                                 Delete doctor
@@ -232,6 +243,21 @@ const DoctorModal = (props) => {
 
 const Doctors = (props) => {
     const [[doctors, specialties, hospitals], setItems] = useState([[], [], []]);
+    const [newModalOpened, setNewModalOpened] = useState(false);
+
+    const newDoctor = {
+        name: "",
+        title: "",
+        specialty: null,
+        workplace: null,
+        description: "",
+        picture_url: "",
+        rating: 10,
+    };
+
+    const addDoctor = () => {
+        setNewModalOpened(true);
+    };
 
     const defaultCmdBarItems = props.user.role_id === 0
         ? [
@@ -239,8 +265,7 @@ const Doctors = (props) => {
                 key: 'new',
                 text: 'New',
                 iconProps: {iconName: 'Add'},
-                onClick: () => {
-                }
+                onClick: addDoctor
             }
         ]
         : [];
@@ -275,7 +300,7 @@ const Doctors = (props) => {
         }));
 
         setCmdBarItems([
-            cmdBarItems[0],
+            ...defaultCmdBarItems,
             {
                 key: 'filter',
                 text: 'Filter',
@@ -308,10 +333,14 @@ const Doctors = (props) => {
                 <div className={style.gridAutoFill}>
                     {doctors.map(doctor =>
                         <div className={style.gridItem} key={doctor.id}>
-                            <Card info={{doctor, specialties, hospitals}} user={props.user} updateCallback={fetchData}/>
+                            <Card info={{doctor, specialties, hospitals}} user={props.user}
+                                  updateCallback={fetchData}/>
                         </div>
                     )}
                 </div>
+                <DoctorModal info={{doctor: newDoctor, specialties, hospitals}} user={props.user}
+                             updateCallback={fetchData} newItem={true}
+                             open={newModalOpened} onDismiss={() => setNewModalOpened(false)}/>
             </div>
         </div>
     );

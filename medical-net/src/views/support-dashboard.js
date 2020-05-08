@@ -118,7 +118,6 @@ const EditBox = props => {
 const MessagesManagementBoard = () => {
     const {palette} = getTheme();
     const [[items, allItems], setItems] = useState([[], []]);
-    const [filterText, setFilterText] = useState('');
     const [[editing, editingItem], setEditMode] = useState([false, null]);
     const [teachingBubbleVisible, {toggle: toggleTeachingBubbleVisible}] = useBoolean(false);
 
@@ -177,15 +176,6 @@ const MessagesManagementBoard = () => {
         // get messages from database
         fetchData().catch(err => console.error(err));
     }, []);
-
-    const _onFilterChanged = (_: any, text: string) => {
-        this.setState({
-            filterText: text,
-            items: text
-                ? this._originalItems.filter(item => item.name.toLowerCase().indexOf(text.toLowerCase()) >= 0)
-                : this._originalItems,
-        });
-    };
 
     const _onRenderCell = (item, index) => {
         return (

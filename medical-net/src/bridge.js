@@ -97,6 +97,17 @@ async function updateDoctorInfo(id, info) {
     );
 }
 
+async function addDoctor(info) {
+    await axios.post(`${config.apiUrl}/doctors`,
+        info,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+}
+
 export default {
     register,
     login,
@@ -106,4 +117,5 @@ export default {
     getDoctors,
     deleteDoctor,
     updateDoctorInfo,
+    addDoctor,
 };

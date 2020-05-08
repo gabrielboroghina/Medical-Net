@@ -14,6 +14,17 @@ router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_U
     }
 });
 
+router.post('/', authorize(UserRoles.ADMIN), async (req, res, next) => {
+    const data = req.body;
+
+    try {
+        await doctorsModel.add(data);
+        res.status(200).end();
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.put('/:id', authorize(UserRoles.ADMIN), async (req, res, next) => {
     const id = req.params.id;
     const data = req.body;
