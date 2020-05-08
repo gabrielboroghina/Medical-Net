@@ -21,7 +21,7 @@ services:
       TZ: Europe/Bucharest
       PGTZ: Europe/Bucharest
     ports:
-      - "54621:5432"
+      - "7777:5432"
     volumes:
       - lab5_pgdb:/var/lib/postgresql/data
       - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql

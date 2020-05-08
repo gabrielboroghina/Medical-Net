@@ -153,7 +153,6 @@
 
 .card {
   display: inline-block;
-  margin-bottom: 20px;
   width: 250px;
 }
 
@@ -278,7 +277,7 @@ img {
   flex: 1 0 auto;
   box-sizing: border-box;
   margin: 30px auto 0 auto;
-  padding: 50px 0;
+  padding: 50px 0 30px 0;
 
   width: 70%;
 
@@ -286,11 +285,25 @@ img {
   flex-direction: column;
 }
 
+.flexContainerScreenHeight {
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  margin: 30px auto 0 auto;
+  padding: 50px 0 30px 0;
+
+  width: 70%;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 90%;
+}
+
 @media screen and (max-width: 600px) {
-  .flexContainer {
+  .flexContainer, .flexContainerScreenHeight {
     width: 100%;
     box-sizing: border-box;
-    padding: 10% 10px;
+    padding: 50px 10px;
   }
 
   .cardGridContainer {
@@ -408,5 +421,22 @@ img {
     p:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.gridAutoFill {
+  display: grid;
+  position: relative;
+  overflow: auto;
+
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+
+  .gridItem {
+    //background-color: green;
+    //border: 1px solid #fff;
+    padding: 15px;
+
+    display: flex;
+    justify-content: center;
   }
 }

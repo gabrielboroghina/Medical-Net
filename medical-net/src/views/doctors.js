@@ -140,77 +140,21 @@ const DoctorModal = (props) => {
     );
 };
 
-const ListGrid = (props) => {
-    const minCardWidth = 250;
-    const ROWS_PER_PAGE = 3;
-    let _columnCount, _columnWidth, _rowHeight;
-
-    const _getItemCountForPage = (itemIndex, surfaceRect) => {
-        if (itemIndex === 0) {
-            _columnCount = Math.floor(surfaceRect.width / minCardWidth);
-            _columnWidth = Math.floor(surfaceRect.width / _columnCount);
-            _rowHeight = _columnWidth;
-        }
-
-        return _columnCount * ROWS_PER_PAGE;
-    };
-
-    const _getPageHeight = () => {
-        return _rowHeight * ROWS_PER_PAGE;
-    };
-
-    const _onRenderCell = (item, index) => {
-        return (
-            <div className={style.listGridTile}
-                 style={{width: Math.floor(100 / _columnCount) + '%'}}
-            >
-                <div className={style.pad}>
-                    {item}
-                </div>
-            </div>
-        );
-    };
-
-    return (
-        <List className={style.listGrid}
-              items={props.items}
-              getItemCountForPage={_getItemCountForPage}
-              getPageHeight={_getPageHeight}
-              renderedWindowsAhead={4}
-              onRenderCell={_onRenderCell}
-        />
-    );
-};
-
 const Doctors = (props) => {
-    const [[doctors, allDoctors], setDoctors] = useState([[], []]);
-    const [cmdBarItems, setCmdBarItems] = useState([]);
+    const [doctors, setDoctors] = useState([]);
 
-    // let cmdBarItems = [
-    //     {
-    //         key: 'filter',
-    //         text: 'Filter',
-    //         iconProps: {iconName: 'Filter'},
-    //         subMenuProps: {
-    //             items: [
-    //                 {
-    //                     key: 'all',
-    //                     text: 'All specialties',
-    //                     onClick: () => setDoctors([allDoctors, allDoctors])
-    //                 },
-    //             ],
-    //         },
-    //     },
-    // ];
-
-    if (props.user.role_id === 0)
-        cmdBarItems.push({
-            key: 'newItem',
-            text: 'New',
-            iconProps: {iconName: 'Add'},
-            onClick: () => {
+    const defaultCmdBarItems = props.user.role_id === 0
+        ? [
+            {
+                key: 'new',
+                text: 'New',
+                iconProps: {iconName: 'Add'},
+                onClick: () => {
+                }
             }
-        });
+        ]
+        : [];
+    const [cmdBarItems, setCmdBarItems] = useState(defaultCmdBarItems);
 
     const cmdBarFarItems = [
         {
@@ -230,7 +174,7 @@ const Doctors = (props) => {
 
         for (const doctor of doctors)
             doctor.showDetails = false;
-        setDoctors([doctors, doctors]);
+        setDoctors(doctors);
 
         // create filters in the command bar for each specialty
         const specialtyFilters = [];
@@ -239,24 +183,26 @@ const Doctors = (props) => {
             .forEach(spec => specialtyFilters.push({
                 key: spec,
                 text: spec,
-                onClick: () => setDoctors([doctors.filter(item => item.specialty === spec), doctors])
+                onClick: () => setDoctors(doctors.filter(item => item.specialty === spec))
             }));
 
-        setCmdBarItems([{
-            key: 'filter',
-            text: 'Filter',
-            iconProps: {iconName: 'Filter'},
-            subMenuProps: {
-                items: [
-                    {
-                        key: 'all',
-                        text: 'All specialties',
-                        onClick: () => setDoctors([doctors, doctors])
-                    },
-                    ...specialtyFilters
-                ],
-            },
-        }]);
+        setCmdBarItems([
+            cmdBarItems[0],
+            {
+                key: 'filter',
+                text: 'Filter',
+                iconProps: {iconName: 'Filter'},
+                subMenuProps: {
+                    items: [
+                        {
+                            key: 'all',
+                            text: 'All specialties',
+                            onClick: () => setDoctors(doctors)
+                        },
+                        ...specialtyFilters
+                    ],
+                },
+            }]);
     }
 
     useEffect(() => {
@@ -264,16 +210,16 @@ const Doctors = (props) => {
     }, []);
 
     return (
-        <div className={style.flexContainer}>
+        <div className={style.flexContainerScreenHeight}>
             <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
                 <CommandBar
                     style={{boxShadow: Depths.depth8}}
                     items={cmdBarItems}
                     farItems={cmdBarFarItems}
                 />
-                <ListGrid items={doctors.map(doctor =>
-                    <Card info={doctor}/>
-                )}/>
+                <div className={style.gridAutoFill}>
+                    {doctors.map(doctor => <div className={style.gridItem}><Card info={doctor}/></div>)}
+                </div>
             </div>
         </div>
     );
