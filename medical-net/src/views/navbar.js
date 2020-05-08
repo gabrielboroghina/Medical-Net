@@ -15,7 +15,7 @@ import {useCookies} from "react-cookie";
 initializeIcons();
 
 const Navbar = props => {
-    const [cookies, setCookie, removeCookie] = useCookies(['user_profile']);
+    const [, , removeCookie] = useCookies(['user_profile']);
     const history = useHistory();
 
     const signOut = () => {

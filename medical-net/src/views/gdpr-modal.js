@@ -9,7 +9,7 @@ import {
 
 const GDPRModal = props => {
     const [hidden, setHidden] = useState(!props.show);
-    const [cookies, setCookie] = useCookies();
+    const [, setCookie] = useCookies();
 
     const acceptCookies = () => {
         const acceptedCookies = {

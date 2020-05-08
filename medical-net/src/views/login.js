@@ -4,6 +4,7 @@ import {Link, useHistory} from 'react-router-dom';
 import {useState} from "react";
 import bridge from "../bridge";
 import style from '../style.module.scss';
+import {useCookies} from "react-cookie";
 
 import {
     DefaultButton, PrimaryButton,
@@ -12,14 +13,13 @@ import {
     getTheme
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
-import {useCookies} from "react-cookie";
 
 
 const LoginPanel = props => {
     const {palette} = getTheme();
     const [err, setErr] = useState("");
     const history = useHistory();
-    const [cookies, setCookie] = useCookies([]);
+    const [, setCookie] = useCookies([]);
 
     const authenticateUser = async () => {
         const authData = {
