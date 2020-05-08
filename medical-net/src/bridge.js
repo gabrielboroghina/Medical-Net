@@ -86,6 +86,17 @@ async function deleteDoctor(id) {
         });
 }
 
+async function updateDoctorInfo(id, info) {
+    await axios.put(`${config.apiUrl}/doctors/${id}`,
+        info,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+}
+
 export default {
     register,
     login,
@@ -94,4 +105,5 @@ export default {
     updateMessage,
     getDoctors,
     deleteDoctor,
+    updateDoctorInfo,
 };

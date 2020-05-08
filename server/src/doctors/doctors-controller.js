@@ -14,6 +14,18 @@ router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_U
     }
 });
 
+router.put('/:id', authorize(UserRoles.ADMIN), async (req, res, next) => {
+    const id = req.params.id;
+    const data = req.body;
+
+    try {
+        await doctorsModel.updateById(id, data);
+        res.status(200).end();
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.delete('/:id', authorize(UserRoles.ADMIN), async (req, res, next) => {
     const id = req.params.id;
     try {

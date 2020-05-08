@@ -1,29 +1,29 @@
 import * as React from 'react';
 import style from '../style.module.scss';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import bridge from "../bridge";
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
 import {
     DocumentCard,
     DocumentCardTitle,
-    DocumentCardDetails,
     DocumentCardImage,
     DocumentCardStatus,
     DocumentCardLocation,
 } from 'office-ui-fabric-react/lib/DocumentCard';
 
 import {
-    IconButton, DefaultButton,
-    Text,
+    IconButton, DefaultButton, PrimaryButton, SpinButton,
+    Text, TextField,
     CommandBar,
     ImageFit,
     Rating,
-    List,
-    Modal,
-    getTheme, mergeStyleSets, Separator, MessageBarType, MessageBar,
+    Modal, Stack,
+    getTheme,
+    mergeStyleSets,
+    MessageBarType, MessageBar,
+    ComboBox, Label
 } from "office-ui-fabric-react";
-import {useCookies} from "react-cookie";
 
 
 const {palette} = getTheme();
@@ -33,31 +33,46 @@ const Card = props => {
 
     return (
         <>
-            <DocumentCard
-                className={style.card}
-                styles={{boxShadow: Depths.depth4}}
-                onClick={() => setModalOpen(true)}
+            <DocumentCard className={style.card}
+                          styles={{boxShadow: Depths.depth4}}
+                          onClick={() => setModalOpen(true)}
             >
-                <DocumentCardImage height={160} imageFit={ImageFit.contain} imageSrc={props.info.picture_url}/>
-                <DocumentCardTitle title={props.info.name} shouldTruncate/>
-                <DocumentCardLocation location={props.info.workplace}/>
-                <DocumentCardStatus statusIcon="medical" status={props.info.specialty}/>
+                <DocumentCardImage height={160} imageFit={ImageFit.contain} imageSrc={props.info.doctor.picture_url}/>
+                <DocumentCardTitle title={props.info.doctor.name} shouldTruncate/>
+                <DocumentCardLocation
+                    location={props.info.hospitals.filter(h => h.id === props.info.doctor.workplace)[0].name}/>
+                <DocumentCardStatus statusIcon="medical"
+                                    status={props.info.specialties.filter(spec => spec.id === props.info.doctor.specialty)[0].name}/>
 
                 <Rating style={{textAlign: "right", marginRight: 10}} id="small"
-                        min={1} max={5} rating={(props.info.rating - 7) / 3 * 5} readOnly
+                        min={1} max={5} rating={(props.info.doctor.rating - 7) / 3 * 5} readOnly
                 />
             </DocumentCard>
 
-            <DoctorModal info={props.info}
+            <DoctorModal info={props.info} user={props.user} updateCallback={props.updateCallback}
                          open={modalOpen} onDismiss={() => setModalOpen(false)}/>
         </>
     );
 };
 
 const DoctorModal = (props) => {
-    const [cookies] = useCookies(['user_profile']);
-    const [notification, setNotification] = useState([null, null]);
     const theme = getTheme();
+    const [notification, setNotification] = useState([null, null]);
+    const [selectedSpec, setSelectedSpec] = useState([
+        props.info.doctor.specialty,
+        props.info.specialties.filter(spec => spec.id === props.info.doctor.specialty)[0].name
+    ]);
+    const [selectedWorkplace, setSelectedWorkplace] = useState([
+        props.info.doctor.workplace,
+        props.info.hospitals.filter(h => h.id === props.info.doctor.workplace)[0].name
+    ]);
+
+    const onChangeSpecialty = useCallback((ev, option, index, value) =>
+        setSelectedSpec([option?.key, value]), [setSelectedSpec]
+    );
+    const onChangeWorkplace = useCallback((ev, option, index, value) =>
+        setSelectedWorkplace([option?.key, value]), [setSelectedWorkplace]
+    );
 
     const contentStyles = mergeStyleSets({
         header: [
@@ -84,8 +99,27 @@ const DoctorModal = (props) => {
     };
 
     const deleteDoctor = () => {
-        bridge.deleteDoctor(props.info.id).then(() => {
+        bridge.deleteDoctor(props.info.doctor.id).then(() => {
             setNotification([MessageBarType.success, 'The doctor was deleted from the database']);
+        }).catch(() => {
+            setNotification([MessageBarType.severeWarning, 'There was an error processing your request']);
+        });
+    };
+
+    const updateDoctorInfo = () => {
+        const newDetails = {
+            name: document.getElementById("field-name").value,
+            title: document.getElementById("field-title").value,
+            specialty: selectedSpec[0] || selectedSpec[1],
+            workplace: selectedWorkplace[0] || selectedWorkplace[1],
+            description: document.getElementById("field-description").value,
+            picture_url: document.getElementById("field-photo").value,
+            rating: document.getElementById("field-rating").childNodes[0].value,
+        };
+
+        bridge.updateDoctorInfo(props.info.doctor.id, newDetails).then(() => {
+            setNotification([MessageBarType.success, 'Doctor\'s details were updated']);
+            props.updateCallback(); // update the data in the main page (doctor cards)
         }).catch(() => {
             setNotification([MessageBarType.severeWarning, 'There was an error processing your request']);
         });
@@ -100,7 +134,11 @@ const DoctorModal = (props) => {
                allowTouchBodyScroll={true}
         >
             <div className={contentStyles.header}>
-                <span>{props.info.name}</span>
+                {
+                    props.user.role_id === 0
+                        ? <TextField id="field-name" label="Name:" underlined defaultValue={props.info.doctor.name}/>
+                        : <span>{props.info.doctor.name}</span>
+                }
                 <IconButton styles={iconButtonStyles}
                             iconProps={{iconName: "Cancel"}}
                             ariaLabel="Close popup modal"
@@ -108,22 +146,75 @@ const DoctorModal = (props) => {
                 />
             </div>
             <div className={style.body}>
-                <Text variant={"mediumPlus"}>
-                    {props.info.title} <b>{props.info.specialty}</b> - {props.info.workplace}
-                </Text>
+                {
+                    props.user.role_id === 0
+                        ? <Stack tokens={{childrenGap: 10}}>
+                            <TextField id="field-title" label="Title:" defaultValue={props.info.doctor.title}
+                                       underlined
+                            />
+                            <div style={{display: "flex"}}>
+                                <Label className={style.inlineLabel}>Specialty:</Label>
+                                <ComboBox id="field-spec" style={{flex: 1}} allowFreeform
+                                          text={selectedSpec[1]}
+                                          selectedKey={selectedSpec[0]}
+                                          onChange={onChangeSpecialty}
+                                          options={props.info.specialties.map(spec => ({key: spec.id, text: spec.name}))}
+                                />
+                            </div>
+                            <div style={{display: "flex"}}>
+                                <Label className={style.inlineLabel}>Hospital:</Label>
+                                <ComboBox id="field-workplace" style={{flex: 1}} allowFreeform
+                                          text={selectedWorkplace[1]}
+                                          selectedKey={selectedWorkplace[0]}
+                                          onChange={onChangeWorkplace}
+                                          options={props.info.hospitals.map(h => ({key: h.id, text: h.name}))}
+                                />
+                            </div>
+                        </Stack>
+                        : <Text variant={"mediumPlus"}>
+                            {props.info.doctor.title} <b>{props.info.doctor.specialty}</b> - {props.info.doctor.workplace}
+                        </Text>
+                }
+
                 <div className={style.cardDetails}>
                     <br/>
-                    {props.info.description && props.info.description.split('\n').map((phrase, idx) =>
-                        <Text key={idx}>• {phrase}<br/></Text>
-                    )}
+                    {
+                        props.user.role_id === 0
+                            ?
+                            <Stack tokens={{childrenGap: 10}}>
+                                <TextField id="field-description" label="Description:"
+                                           defaultValue={props.info.doctor.description}
+                                           underlined multiline autoAdjustHeight resizable={false}
+                                />
+                                <TextField id="field-photo" label="Photo url:"
+                                           defaultValue={props.info.doctor.picture_url}
+                                           underlined
+                                />
+                                <div style={{display: "flex"}}>
+                                    <Label className={style.inlineLabel}>Rating:</Label>
+                                    <SpinButton style={{flex: 1}} id="field-rating"
+                                                min={0} max={10} step={0.1} defaultValue={props.info.doctor.rating}
+                                    />
+                                </div>
+                            </Stack>
+                            : props.info.doctor.description &&
+                            props.info.doctor.description.split('\n').map((phrase, idx) =>
+                                <Text key={idx}>• {phrase}<br/></Text>
+                            )
+                    }
                 </div>
                 {
-                    cookies['user_profile'] && cookies['user_profile'].role_id === 0 &&
+                    props.user && props.user.role_id === 0 &&
                     <>
-                        <div style={{margin: "10px 0"}}><Separator>Manage</Separator></div>
-                        <DefaultButton iconProps={{iconName: "Delete"}} onClick={deleteDoctor}>Delete
-                            doctor
-                        </DefaultButton>
+                        <div style={{paddingBottom: 10}}/>
+                        <Stack horizontal tokens={{childrenGap: 20}}>
+                            <PrimaryButton iconProps={{iconName: "Save"}} onClick={updateDoctorInfo}>
+                                Update information
+                            </PrimaryButton>
+                            <DefaultButton iconProps={{iconName: "Delete"}} onClick={deleteDoctor}>
+                                Delete doctor
+                            </DefaultButton>
+                        </Stack>
                         {
                             notification[0] &&
                             <div style={{marginTop: 10}}>
@@ -131,7 +222,6 @@ const DoctorModal = (props) => {
                                     {notification[1]}
                                 </MessageBar>
                             </div>
-
                         }
                     </>
                 }
@@ -141,7 +231,7 @@ const DoctorModal = (props) => {
 };
 
 const Doctors = (props) => {
-    const [doctors, setDoctors] = useState([]);
+    const [[doctors, specialties, hospitals], setItems] = useState([[], [], []]);
 
     const defaultCmdBarItems = props.user.role_id === 0
         ? [
@@ -170,21 +260,19 @@ const Doctors = (props) => {
 
     async function fetchData() {
         // fetch doctors information from server
-        const doctors = await bridge.getDoctors();
+        const [doctors, specialties, hospitals] = await bridge.getDoctors();
 
         for (const doctor of doctors)
             doctor.showDetails = false;
-        setDoctors(doctors);
+        setItems([doctors, specialties, hospitals]);
 
         // create filters in the command bar for each specialty
         const specialtyFilters = [];
-        doctors.filter((value, index, self) => self.indexOf(value) === index)
-            .map(doctor => doctor.specialty)
-            .forEach(spec => specialtyFilters.push({
-                key: spec,
-                text: spec,
-                onClick: () => setDoctors(doctors.filter(item => item.specialty === spec))
-            }));
+        specialties.forEach(spec => specialtyFilters.push({
+            key: spec.name,
+            text: spec.name,
+            onClick: () => setItems([doctors.filter(item => item.specialty === spec.name), specialties, hospitals])
+        }));
 
         setCmdBarItems([
             cmdBarItems[0],
@@ -197,7 +285,7 @@ const Doctors = (props) => {
                         {
                             key: 'all',
                             text: 'All specialties',
-                            onClick: () => setDoctors(doctors)
+                            onClick: () => setItems([doctors, specialties, hospitals])
                         },
                         ...specialtyFilters
                     ],
@@ -218,7 +306,11 @@ const Doctors = (props) => {
                     farItems={cmdBarFarItems}
                 />
                 <div className={style.gridAutoFill}>
-                    {doctors.map(doctor => <div className={style.gridItem}><Card info={doctor}/></div>)}
+                    {doctors.map(doctor =>
+                        <div className={style.gridItem} key={doctor.id}>
+                            <Card info={{doctor, specialties, hospitals}} user={props.user} updateCallback={fetchData}/>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
