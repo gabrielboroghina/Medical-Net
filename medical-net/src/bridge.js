@@ -118,6 +118,39 @@ async function getRecords(userId) {
     return result.data;
 }
 
+async function grantAccess(userId, allowedUserId) {
+    await axios.put(`${config.apiUrl}/users/${userId}/records/grants`,
+        {type: "grant", doctorId: allowedUserId},
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+}
+
+async function revokeAccess(userId, allowedUserId) {
+    await axios.put(`${config.apiUrl}/users/${userId}/records/grants`,
+        {type: "revoke", doctorId: allowedUserId},
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+}
+
+async function getAccessGrants(userId) {
+    const result = await axios.get(`${config.apiUrl}/users/${userId}/records/grants`,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+    return result.data;
+}
+
 export default {
     register,
     login,
@@ -129,4 +162,7 @@ export default {
     updateDoctorInfo,
     addDoctor,
     getRecords,
+    grantAccess,
+    revokeAccess,
+    getAccessGrants,
 };

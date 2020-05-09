@@ -447,6 +447,8 @@ img {
   margin-right: 10px;
 
   width: auto;
+
+  float: left;
 }
 
 .spinButton {
@@ -495,4 +497,15 @@ img {
 
   display: flex;
   align-items: center;
+}
+
+.actionBar {
+  background-color: white;
+  padding: 10px 20px;
+}
+
+.vertCenterFullWidth {
+  display: flex;
+  align-items: center;
+  width: 100%
 }

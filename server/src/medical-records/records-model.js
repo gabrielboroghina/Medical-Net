@@ -34,6 +34,37 @@ const getUserRecords = async (userId) => {
     return result;
 };
 
+const getAccessGrants = async (userId) => {
+    const query = `
+        select doctor_id
+        from access_grants
+        where user_id = $1
+    `;
+    const result = await executeQuery(query, [userId]);
+    return result.map(res => res.doctor_id);
+};
+
+const grantAccess = async (userId, doctorId) => {
+    const query = `
+        insert into access_grants(user_id, doctor_id)
+        values ($1, $2)
+    `;
+    await executeQuery(query, [userId, doctorId]);
+};
+
+const revokeAccess = async (userId, doctorId) => {
+    const query = `
+        delete
+        from access_grants
+        where user_id = $1
+          and doctor_id = $2
+    `;
+    await executeQuery(query, [userId, doctorId]);
+};
+
 module.exports = {
     getUserRecords,
+    grantAccess,
+    getAccessGrants,
+    revokeAccess,
 };

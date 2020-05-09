@@ -1,12 +1,18 @@
 import * as React from 'react';
 import style from '../style.module.scss';
-import {useState, useEffect, useMemo} from "react";
+import {useState, useEffect, useReducer, memo} from "react";
 import bridge from "../bridge";
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
-import {getTheme, CommandBar, Text, Label, Persona, PersonaSize, SearchBox} from "office-ui-fabric-react";
-import {memo} from "react";
-import {useConst} from "@uifabric/react-hooks";
-import {useCallback} from "react";
+import {
+    getTheme,
+    Text,
+    Label,
+    Persona,
+    PersonaSize,
+    SearchBox,
+    NormalPeoplePicker, Stack, IconButton, TeachingBubble,
+} from "office-ui-fabric-react";
+import {useBoolean} from "@uifabric/react-hooks";
 
 const {palette} = getTheme();
 
@@ -55,10 +61,6 @@ const Record = (props) => {
                     />
                 </div>
             </div>
-
-            {/*<div className={style.columnSmall}>*/}
-            {/*    Files*/}
-            {/*</div>*/}
         </div>
     );
 };
@@ -76,62 +78,129 @@ const RecordsContainer = (props) => {
     );
 };
 
-const MedicalRecords = (props) => {
-    const [records, setRecords] = useState([]);
-    const [cmdBarItems, setCmdBarItems] = useState([]);
+const SearchBar = memo((props) => (
+    <div className={style.fullHeight}>
+        <SearchBox
+            styles={{root: {width: "100%"}}}
+            placeholder="Search"
+            underlined
+            onClear={ev => props.onChange(null)}
+            onChange={(e, newValue) => props.onChange(newValue)}
+        />
+    </div>
+));
 
-    const addRecord = () => {
-
+const PeoplePicker = (props) => {
+    const suggestionProps = {
+        suggestionsHeaderText: 'Suggested Doctors',
+        mostRecentlyUsedHeaderText: 'Suggested Doctors',
+        noResultsFoundText: 'No results found',
+        loadingText: 'Loading',
+        showRemoveButtons: true,
+        suggestionsAvailableAlertText: 'People Picker Suggestions available',
+        suggestionsContainerAriaLabel: 'Suggested contacts',
     };
 
-    const cmdBarFarItems = [
-        {
-            key: 'info',
-            text: 'Info',
-            ariaLabel: 'Info',
-            iconOnly: true,
-            iconProps: {iconName: 'Info'},
-        },
-    ];
+    const [teachingBubbleVisible, {toggle: toggleTeachingBubbleVisible}] = useBoolean(false);
+    const picker = React.useRef(null);
+    let selectedPersonas = props.selectedPersonas;
+
+    const onFilterChanged = (filterText, currentPersonas, limitResults) => {
+        if (filterText) {
+            let filteredPersonas = props.personas.filter(item => item.text.includes(filterText));
+
+            filteredPersonas = limitResults ? filteredPersonas.slice(0, limitResults) : filteredPersonas;
+            return filteredPersonas;
+        } else {
+            return [];
+        }
+    };
+
+    const changeAccessGrants = (items) => {
+        for (const item of items)
+            if (!selectedPersonas.includes(item.id))
+                bridge.grantAccess(props.user.id, item.id);
+        for (const selectedItem of selectedPersonas)
+            if (!items.map(item => item.id).includes(selectedItem))
+                bridge.revokeAccess(props.user.id, selectedItem);
+        selectedPersonas = items.map(item => item.id);
+    };
+
+    return (
+        <div style={{display: "flex"}}>
+            <div className={style.vertCenterFullWidth}>
+                <Label className={style.inlineLabel}>Provide access:</Label>
+                <NormalPeoplePicker
+                    onChange={changeAccessGrants}
+                    onEmptyInputFocus={() => props.personas.slice(0, 5)}
+                    onResolveSuggestions={onFilterChanged}
+                    defaultSelectedItems={props.personas.filter(pers => props.selectedPersonas.includes(pers.id))}
+                    getTextFromItem={item => item.text}
+                    className={'ms-PeoplePicker'}
+                    pickerSuggestionsProps={suggestionProps}
+                    componentRef={picker}
+                    key={props.selectedPersonas}
+                    styles={{root: {flexGrow: 1}}}
+                />
+                <IconButton id="infoBtn" iconProps={{iconName: "Info"}} ariaLabel={'Info'}
+                            onClick={toggleTeachingBubbleVisible}/>
+            </div>
+            {
+                teachingBubbleVisible &&
+                <TeachingBubble target="#infoBtn"
+                                hasCondensedHeadline={true}
+                                onDismiss={toggleTeachingBubbleVisible}
+                                headline="Provide access to your medical history"
+                >
+                    Allow a doctor to view and add medical records to your medical history
+                </TeachingBubble>
+            }
+        </div>
+    )
+};
+
+const MedicalRecords = (props) => {
+    const recordsReducer = ([records, allRecords], newValue) => {
+        if (!newValue)
+            return [allRecords, allRecords];
+        if (Array.isArray(newValue))
+            return [newValue, newValue];
+
+        return [allRecords.filter(rec =>
+            rec.investigations.toLowerCase().includes(newValue) ||
+            rec.diagnosis.toLowerCase().includes(newValue) ||
+            rec.prescription.toLowerCase().includes(newValue)),
+            allRecords
+        ]
+    };
+
+    const [[records, allRecords], dispatchRecords] = useReducer(recordsReducer, [[], []]);
+    const [doctors, setDoctors] = useState([]);
+    const [accessGrants, setAccessGrants] = useState([]);
 
     async function fetchData() {
         const records = await bridge.getRecords(props.user.id);
-        setRecords(records);
+        const [doctors, ,] = await bridge.getDoctors();
+        const grants = await bridge.getAccessGrants(props.user.id);
 
-        const SearchBar = () => (
-            <div className={style.fullHeight}>
-                <SearchBox
-                    styles={{root: {maxWidth: 400}}}
-                    placeholder="Search"
-                    underlined
-                    onClear={ev => setRecords(records)}
-                    onChange={(e, newValue) => {
-                        setRecords(records.filter(rec =>
-                            rec.investigations.toLowerCase().includes(newValue) ||
-                            rec.diagnosis.toLowerCase().includes(newValue) ||
-                            rec.prescription.toLowerCase().includes(newValue)),
-                        )
-                    }}
-                />
-            </div>
-        );
+        const personas = doctors.map(doctor => ({
+            imageUrl: doctor.picture_url,
+            imageInitials: doctor.name
+                .split(' ')
+                .slice(-2)
+                .map(token => token[0])
+                .join('')
+                .substr(0, 2)
+                .toUpperCase(),
+            text: doctor.name,
+            secondaryText: doctor.workplace,
+            size: PersonaSize.size24,
+            id: doctor.id
+        }));
 
-        setCmdBarItems([
-            ...(props.user.role_id === 3
-                    ? [{
-                        key: 'new',
-                        text: 'New',
-                        iconProps: {iconName: 'Add'},
-                        onClick: addRecord
-                    }]
-                    : []
-            ),
-            {
-                key: 'search',
-                text: 'Search',
-                commandBarButtonAs: SearchBar
-            }
-        ]);
+        setDoctors(personas);
+        dispatchRecords(records);
+        setAccessGrants(grants);
     }
 
     useEffect(() => {
@@ -141,11 +210,14 @@ const MedicalRecords = (props) => {
     return (
         <div className={style.flexContainerScreenHeight}>
             <div className={style.cardGridContainer} style={{backgroundColor: palette.neutralLighter}}>
-                <CommandBar
-                    style={{boxShadow: Depths.depth8}}
-                    items={cmdBarItems}
-                    farItems={cmdBarFarItems}
-                />
+                <div className={style.actionBar} style={{boxShadow: Depths.depth8}}>
+                    <Stack tokens={{childrenGap: 10}}>
+                        <div style={{width: "100%"}}>
+                            <SearchBar onChange={dispatchRecords}/>
+                        </div>
+                        <PeoplePicker personas={doctors} selectedPersonas={accessGrants} user={props.user}/>
+                    </Stack>
+                </div>
                 <RecordsContainer records={records}/>
             </div>
         </div>
