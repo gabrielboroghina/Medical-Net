@@ -1,9 +1,10 @@
 const express = require('express');
 const UsersService = require('./users-model.js');
 const {validateFields} = require('../utils/field-validator');
-
+const RecordsController = require('../medical-records/records-controller');
 
 const router = express.Router();
+router.use('/:id/records', RecordsController);
 
 router.post('/register', async (req, res, next) => {
     const {username, password, email, name} = req.body;

@@ -26,6 +26,7 @@ const UserRoles = Object.freeze({
     ADMIN: 0,
     SUPPORT: 1,
     NORMAL_USER: 2,
+    DOCTOR: 3,
 });
 
 const generateToken = async (payload) => {

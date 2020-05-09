@@ -114,7 +114,7 @@ const verifyEmailToken = async (verificationToken) => {
 
 const getUserProfile = async (userId) => {
     const query = `
-        select username, name, email, role_id
+        select id, username, name, email, role_id
         from users
         where id = $1
     `;

@@ -108,6 +108,16 @@ async function addDoctor(info) {
     );
 }
 
+async function getRecords(userId) {
+    const result = await axios.get(`${config.apiUrl}/users/${userId}/records`,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        });
+    return result.data;
+}
+
 export default {
     register,
     login,
@@ -118,4 +128,5 @@ export default {
     deleteDoctor,
     updateDoctorInfo,
     addDoctor,
+    getRecords,
 };

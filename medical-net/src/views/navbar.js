@@ -91,7 +91,7 @@ const Navbar = props => {
         directionalHintFixed: true,
     };
 
-    if (props.user && [0, 1].includes(props.user.role_id))
+    if (props.user)
         menuProps.items = [
             ...menuProps.items,
             {
@@ -103,6 +103,17 @@ const Navbar = props => {
             },
             {
                 key: 'link3',
+                text: 'Medical Records',
+                onClick: () => {
+                    history.push('/medical-records')
+                }
+            }
+        ];
+    if (props.user && [0, 1].includes(props.user.role_id))
+        menuProps.items = [
+            ...menuProps.items,
+            {
+                key: 'link4',
                 text: 'Dashboard',
                 onClick: () => {
                     history.push('/support-dashboard')
@@ -132,6 +143,12 @@ const Navbar = props => {
                     props.user &&
                     <Link className={style.link} to={"/doctors"}>
                         <Text variant={"mediumPlus"}>Doctors</Text>
+                    </Link>
+                }
+                {
+                    props.user &&
+                    <Link className={style.link} to={"/medical-records"}>
+                        <Text variant={"mediumPlus"}>Medical Records</Text>
                     </Link>
                 }
                 <Link className={style.link} to={"/faq"}>

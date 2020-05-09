@@ -99,6 +99,7 @@ const DoctorModal = (props) => {
     const deleteDoctor = () => {
         bridge.deleteDoctor(props.info.doctor.id).then(() => {
             setNotification([MessageBarType.success, 'The doctor was deleted from the database']);
+            props.updateCallback();
         }).catch(() => {
             setNotification([MessageBarType.severeWarning, 'There was an error processing your request']);
         });

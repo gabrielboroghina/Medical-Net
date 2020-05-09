@@ -12,6 +12,7 @@ import Faq from "./views/faq";
 import NotFound from "./views/not-found";
 import MessagesManagementBoard from "./views/support-dashboard";
 import Home from "./views/home";
+import MedicalRecords from "./views/medical-records";
 import './App.scss';
 
 const customTheme = createTheme({
@@ -77,10 +78,13 @@ const App = () => {
                 <Route path="/not-found" component={NotFound}/>
                 <Route path="/login" component={LoginPanel}/>
                 <Route path="/register" component={RegisterBox}/>
+                <Route path="/emailconfirmed" component={EmailConfirm}/>
                 <ProtectedRoute path="/doctors" allowedRoles={[0, 1, 2]}>
                     <Doctors user={userProfile}/>
                 </ProtectedRoute>
-                <Route path="/emailconfirmed" component={EmailConfirm}/>
+                <ProtectedRoute path="/medical-records" allowedRoles={[0, 1, 2]}>
+                    <MedicalRecords user={userProfile}/>
+                </ProtectedRoute>
                 <Route path="/faq">
                     <Faq user={userProfile}/>
                 </Route>
@@ -89,6 +93,7 @@ const App = () => {
                 </ProtectedRoute>
                 <Home/>
             </Switch>
+
             <Footer/>
             <GDPRModal show={!cookieConsent}/>
         </BrowserRouter>
