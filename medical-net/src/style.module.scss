@@ -407,7 +407,7 @@ img {
 
   .body {
     flex: 4 4 auto;
-    padding: 16px 24px 24px 24px;
+    padding: 15px 20px;
     overflow-y: hidden;
 
     p {
@@ -458,37 +458,17 @@ img {
   padding-left: 12px;
 }
 
-.recordsContainer {
-  display: flex;
-  flex-direction: column;
-}
-
 .recordCard {
   width: 95%;
   margin: 20px auto 0 auto;
 
+  box-sizing: border-box;
+  padding: 15px 20px;
+
   background-color: white;
 
-  .columnWide {
-    float: left;
-    box-sizing: border-box;
-    padding: 15px 20px;
-
-    width: 100%;
-  }
-
-  .columnSmall {
-    float: left;
-    box-sizing: border-box;
-    padding: 15px 20px;
-
-    width: 35%;
-  }
-
-  @media screen and (max-width: 900px) {
-    .columnWide, .columnSmall {
-      width: 100%;
-    }
+  &:last-child {
+    margin-bottom: 20px;
   }
 }
 
@@ -504,8 +484,27 @@ img {
   padding: 10px 20px;
 }
 
+.actionBarTight {
+  background-color: white;
+  padding: 10px 20px 0 20px;
+}
+
 .vertCenterFullWidth {
   display: flex;
   align-items: center;
   width: 100%
+}
+
+.cmdBar {
+  position: relative;
+  height: 44px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+}
+
+.alignRight {
+  position: absolute;
+  right: 0
 }

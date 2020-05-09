@@ -146,7 +146,7 @@ const Navbar = props => {
                     </Link>
                 }
                 {
-                    props.user &&
+                    props.user && [2, 3].includes(props.user.role_id) &&
                     <Link className={style.link} to={"/medical-records"}>
                         <Text variant={"mediumPlus"}>Medical Records</Text>
                     </Link>

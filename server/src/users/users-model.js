@@ -122,9 +122,20 @@ const getUserProfile = async (userId) => {
     return data[0];
 };
 
+const getDoctorGrants = async (doctorUserId) => {
+    const query = `
+        select u.id, u.name, u.email
+        from access_grants
+                 join users u on access_grants.user_id = u.id
+        where doctor_id = (select id from doctors where doctors.user_id = $1)
+    `;
+    return await executeQuery(query, [doctorUserId]);
+};
+
 module.exports = {
     addUser,
     authenticate,
     verifyEmailToken,
     getUserProfile,
+    getDoctorGrants,
 };

@@ -5,7 +5,7 @@ const doctorsModel = require('./doctors-model');
 
 const router = express.Router();
 
-router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER), async (req, res, next) => {
+router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.DOCTOR), async (req, res, next) => {
     try {
         const data = await doctorsModel.getAll();
         res.status(200).json(data);

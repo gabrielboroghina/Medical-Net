@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../App.scss';
 import {Link} from 'react-router-dom';
-import bridge from '../bridge'
+import * as bridge from "../bridge";
 import style from '../style.module.scss';
 
 import {

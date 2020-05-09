@@ -12,7 +12,7 @@ function getToken() {
     return null;
 }
 
-async function register(data) {
+export async function register(data) {
     await axios.post(
         `${config.apiUrl}/users/register`,
         data,
@@ -20,7 +20,7 @@ async function register(data) {
     );
 }
 
-async function login(data) {
+export async function login(data) {
     return axios.post(
         `${config.apiUrl}/users/login`,
         data,
@@ -30,7 +30,7 @@ async function login(data) {
     );
 }
 
-async function getMessages() {
+export async function getMessages() {
     const token = getToken();
 
     return await axios.get(`${config.apiUrl}/messages`,
@@ -41,7 +41,7 @@ async function getMessages() {
         });
 }
 
-async function sendMessage(data) {
+export async function sendMessage(data) {
     await axios.post(
         `${config.apiUrl}/messages`,
         data,
@@ -54,7 +54,7 @@ async function sendMessage(data) {
     );
 }
 
-async function updateMessage(msgId, newProps) {
+export async function updateMessage(msgId, newProps) {
     await axios.put(
         `${config.apiUrl}/messages/${msgId}`,
         newProps,
@@ -67,7 +67,7 @@ async function updateMessage(msgId, newProps) {
     );
 }
 
-async function getDoctors() {
+export async function getDoctors() {
     const result = await axios.get(`${config.apiUrl}/doctors`,
         {
             headers: {
@@ -77,7 +77,7 @@ async function getDoctors() {
     return result.data;
 }
 
-async function deleteDoctor(id) {
+export async function deleteDoctor(id) {
     await axios.delete(`${config.apiUrl}/doctors/${id}`,
         {
             headers: {
@@ -86,7 +86,7 @@ async function deleteDoctor(id) {
         });
 }
 
-async function updateDoctorInfo(id, info) {
+export async function updateDoctorInfo(id, info) {
     await axios.put(`${config.apiUrl}/doctors/${id}`,
         info,
         {
@@ -97,7 +97,7 @@ async function updateDoctorInfo(id, info) {
     );
 }
 
-async function addDoctor(info) {
+export async function addDoctor(info) {
     await axios.post(`${config.apiUrl}/doctors`,
         info,
         {
@@ -108,7 +108,7 @@ async function addDoctor(info) {
     );
 }
 
-async function getRecords(userId) {
+export async function getRecords(userId) {
     const result = await axios.get(`${config.apiUrl}/users/${userId}/records`,
         {
             headers: {
@@ -118,7 +118,7 @@ async function getRecords(userId) {
     return result.data;
 }
 
-async function grantAccess(userId, allowedUserId) {
+export async function grantAccess(userId, allowedUserId) {
     await axios.put(`${config.apiUrl}/users/${userId}/records/grants`,
         {type: "grant", doctorId: allowedUserId},
         {
@@ -129,7 +129,7 @@ async function grantAccess(userId, allowedUserId) {
     );
 }
 
-async function revokeAccess(userId, allowedUserId) {
+export async function revokeAccess(userId, allowedUserId) {
     await axios.put(`${config.apiUrl}/users/${userId}/records/grants`,
         {type: "revoke", doctorId: allowedUserId},
         {
@@ -140,7 +140,7 @@ async function revokeAccess(userId, allowedUserId) {
     );
 }
 
-async function getAccessGrants(userId) {
+export async function getAccessGrants(userId) {
     const result = await axios.get(`${config.apiUrl}/users/${userId}/records/grants`,
         {
             headers: {
@@ -151,18 +151,24 @@ async function getAccessGrants(userId) {
     return result.data;
 }
 
-export default {
-    register,
-    login,
-    getMessages,
-    sendMessage,
-    updateMessage,
-    getDoctors,
-    deleteDoctor,
-    updateDoctorInfo,
-    addDoctor,
-    getRecords,
-    grantAccess,
-    revokeAccess,
-    getAccessGrants,
-};
+export async function getDoctorAccessGrants(doctorUserId) {
+    const result = await axios.get(`${config.apiUrl}/users/${doctorUserId}/grants`,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+    return result.data;
+}
+
+export async function registerRecord(userId, record) {
+    await axios.post(`${config.apiUrl}/users/${userId}/records`,
+        record,
+        {
+            headers: {
+                'Authorization': getToken(),
+            }
+        }
+    );
+}

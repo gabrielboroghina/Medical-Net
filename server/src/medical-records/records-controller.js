@@ -6,11 +6,12 @@ const recordsModel = require('./records-model');
 
 const router = express.Router({mergeParams: true});
 
-router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER), async (req, res, next) => {
+router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.DOCTOR), async (req, res, next) => {
     const userData = res.locals.userData;
     const reqUserId = parseInt(req.params.id);
 
-    if (userData.userId !== reqUserId) {
+    const allowedDoctors = await recordsModel.getAccessGrantsAsUserId(reqUserId);
+    if (userData.userId !== reqUserId && !allowedDoctors.includes(userData.userId)) {
         next(new JsonError(1, {description: 'Not authorized to access this resource'}, 403));
         return;
     }
@@ -34,12 +35,11 @@ router.put('/grants', authorize(UserRoles.NORMAL_USER), async (req, res, next) =
     }
 
     try {
-        let data;
         if (type === "grant")
-            data = await recordsModel.grantAccess(req.params.id, doctorId);
+            await recordsModel.grantAccess(req.params.id, doctorId);
         else if (type === "revoke")
-            data = await recordsModel.revokeAccess(req.params.id, doctorId);
-        res.status(200).json(data);
+            await recordsModel.revokeAccess(req.params.id, doctorId);
+        res.status(200).end();
     } catch (err) {
         next(err);
     }
@@ -57,6 +57,17 @@ router.get('/grants', authorize(UserRoles.NORMAL_USER), async (req, res, next) =
     try {
         const data = await recordsModel.getAccessGrants(reqUserId);
         res.status(200).json(data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.post('/', authorize(UserRoles.DOCTOR), async (req, res, next) => {
+    const record = req.body;
+
+    try {
+        await recordsModel.registerRecord(record);
+        res.status(200).end();
     } catch (err) {
         next(err);
     }

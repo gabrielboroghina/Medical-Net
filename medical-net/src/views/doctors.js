@@ -1,7 +1,7 @@
 import * as React from 'react';
 import style from '../style.module.scss';
 import {useState, useEffect, useCallback} from "react";
-import bridge from "../bridge";
+import * as bridge from "../bridge";
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 
 import {
@@ -74,7 +74,7 @@ const DoctorModal = (props) => {
 
     const contentStyles = mergeStyleSets({
         header: [
-            theme.fonts.xLargePlus,
+            theme.fonts.xLarge,
             {
                 flex: '1 1 auto',
                 borderTop: `4px solid ${theme.palette.themePrimary}`,
@@ -119,7 +119,7 @@ const DoctorModal = (props) => {
         const successCallback = () => {
             setNotification([
                 MessageBarType.success,
-                props.newItem ? 'The entry was succesfuly registered' : 'Doctor\'s details were updated'
+                props.newItem ? 'The entry was successfully registered' : 'Doctor\'s details were updated'
             ]);
             props.updateCallback(); // update the data in the main page (doctor cards)
         };
@@ -134,8 +134,7 @@ const DoctorModal = (props) => {
     };
 
     return (
-        <Modal titleAriaId={props.titleId}
-               isOpen={props.open}
+        <Modal isOpen={props.open}
                onDismiss={props.onDismiss}
                isBlocking={false}
                containerClassName={style.modal}
@@ -155,37 +154,36 @@ const DoctorModal = (props) => {
                 />
             </div>
             <div className={style.body}>
-                {
-                    props.user.role_id === 0
-                        ? <Stack tokens={{childrenGap: 10}}>
-                            <TextField id="field-title" label="Title:" defaultValue={props.info.doctor.title}
-                                       underlined
+                {props.user.role_id === 0
+                    ? <Stack tokens={{childrenGap: 10}}>
+                        <TextField id="field-title" label="Title:" defaultValue={props.info.doctor.title}
+                                   underlined
+                        />
+                        <div style={{display: "flex"}}>
+                            <Label className={style.inlineLabel}>Specialty:</Label>
+                            <ComboBox id="field-spec" style={{flex: 1}} allowFreeform
+                                      text={selectedSpec[1]}
+                                      selectedKey={selectedSpec[0]}
+                                      onChange={onChangeSpecialty}
+                                      options={props.info.specialties.map(spec => ({
+                                          key: spec.id,
+                                          text: spec.name
+                                      }))}
                             />
-                            <div style={{display: "flex"}}>
-                                <Label className={style.inlineLabel}>Specialty:</Label>
-                                <ComboBox id="field-spec" style={{flex: 1}} allowFreeform
-                                          text={selectedSpec[1]}
-                                          selectedKey={selectedSpec[0]}
-                                          onChange={onChangeSpecialty}
-                                          options={props.info.specialties.map(spec => ({
-                                              key: spec.id,
-                                              text: spec.name
-                                          }))}
-                                />
-                            </div>
-                            <div style={{display: "flex"}}>
-                                <Label className={style.inlineLabel}>Hospital:</Label>
-                                <ComboBox id="field-workplace" style={{flex: 1}} allowFreeform
-                                          text={selectedWorkplace[1]}
-                                          selectedKey={selectedWorkplace[0]}
-                                          onChange={onChangeWorkplace}
-                                          options={props.info.hospitals.map(h => ({key: h.id, text: h.name}))}
-                                />
-                            </div>
-                        </Stack>
-                        : <Text variant={"mediumPlus"}>
-                            {props.info.doctor.title} - <b>{props.info.doctor.specialty}</b> - {props.info.doctor.workplace}
-                        </Text>
+                        </div>
+                        <div style={{display: "flex"}}>
+                            <Label className={style.inlineLabel}>Hospital:</Label>
+                            <ComboBox id="field-workplace" style={{flex: 1}} allowFreeform
+                                      text={selectedWorkplace[1]}
+                                      selectedKey={selectedWorkplace[0]}
+                                      onChange={onChangeWorkplace}
+                                      options={props.info.hospitals.map(h => ({key: h.id, text: h.name}))}
+                            />
+                        </div>
+                    </Stack>
+                    : <Text variant={"mediumPlus"}>
+                        {props.info.doctor.title} - <b>{props.info.doctor.specialty}</b> - {props.info.doctor.workplace}
+                    </Text>
                 }
 
                 <div className={style.cardDetails}>
@@ -218,7 +216,7 @@ const DoctorModal = (props) => {
                 {
                     props.user && props.user.role_id === 0 &&
                     <>
-                        <div style={{paddingBottom: 10}}/>
+                        <div style={{paddingBottom: 5}}/>
                         <Stack horizontal tokens={{childrenGap: 20}}>
                             <PrimaryButton iconProps={{iconName: "Save"}} onClick={save}>
                                 {props.newItem ? "Add doctor" : "Update"}

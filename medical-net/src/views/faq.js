@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useState, useEffect} from 'react';
 import '../App.scss';
 import style from "../style.module.scss";
-import bridge from "../bridge";
+import * as bridge from "../bridge";
 
 import {
     PrimaryButton,
