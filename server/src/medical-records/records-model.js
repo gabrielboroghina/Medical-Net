@@ -40,6 +40,7 @@ const getAccessGrants = async (userId) => {
         select doctor_id
         from access_grants
         where user_id = $1
+          and valid_until > now()
     `;
     const result = await executeQuery(query, [userId]);
     return result.map(res => res.doctor_id);

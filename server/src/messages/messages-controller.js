@@ -5,18 +5,18 @@ const messagesModel = require('./messages-model');
 
 const router = express.Router();
 
-router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.NONE),
+router.get('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.DOCTOR, UserRoles.NONE),
     async (req, res, next) => {
         const userData = res.locals.userData;
         try {
-            const data = await messagesModel.getAll([UserRoles.NORMAL_USER, UserRoles.NONE].includes(userData.userRole));
+            const data = await messagesModel.getAll(![UserRoles.ADMIN, UserRoles.SUPPORT].includes(userData.userRole));
             res.status(200).json(data);
         } catch (err) {
             next(err);
         }
     });
 
-router.post('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER), async (req, res, next) => {
+router.post('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_USER, UserRoles.DOCTOR), async (req, res, next) => {
     const data = req.body;
     const userData = res.locals.userData;
 
@@ -32,9 +32,9 @@ router.post('/', authorize(UserRoles.ADMIN, UserRoles.SUPPORT, UserRoles.NORMAL_
 router.put('/:id', authorize(UserRoles.SUPPORT), async (req, res, next) => {
     const newMessageProps = req.body;
     try {
-        await messagesModel.updateMessage(req.params.id, newMessageProps);
+        const oldMessage = await messagesModel.updateMessage(req.params.id, newMessageProps);
 
-        if (newMessageProps.response) {
+        if (newMessageProps.response && !oldMessage.response) {
             // respond to the user that asked the question
             messagesModel.deliverMessageResponse(req.params.id);
         }

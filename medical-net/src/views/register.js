@@ -61,7 +61,7 @@ function RegisterBox() {
     const registerUser = async () => {
         const data = {
             username: document.getElementById("field-user").value,
-            name: document.getElementById("field-user").value,
+            name: document.getElementById("field-name").value,
             email: document.getElementById("field-email").value,
             password: document.getElementById("field-pass").value,
         };
@@ -101,7 +101,7 @@ function RegisterBox() {
                 <Stack tokens={{childrenGap: 20}}>
                     <TextField id="field-user" label="Username:" underlined required
                                autoComplete="username" errorMessage={err.username}/>
-                    <TextField id="field_name" label="Name:" underlined required
+                    <TextField id="field-name" label="Name:" underlined required
                                autoComplete="name" errorMessage={err.name}/>
                     <TextField id="field-email" label="Email:" underlined required
                                autocomplete="email" errorMessage={err.email}/>

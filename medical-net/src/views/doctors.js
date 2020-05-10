@@ -135,7 +135,10 @@ const DoctorModal = (props) => {
 
     return (
         <Modal isOpen={props.open}
-               onDismiss={props.onDismiss}
+               onDismiss={() => {
+                   setNotification([null, null]);
+                   props.onDismiss();
+               }}
                isBlocking={false}
                containerClassName={style.modal}
                allowTouchBodyScroll={true}

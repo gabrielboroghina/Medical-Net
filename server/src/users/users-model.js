@@ -12,7 +12,6 @@ mailer.init();
 
 const addUser = async (username, password, email, name) => {
     const roleId = UserRoles.NORMAL_USER;
-    console.log(name);
     const encryptedPassword = await hashPassword(password);
 
     // build the email verification link
