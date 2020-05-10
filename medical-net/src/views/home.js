@@ -13,7 +13,9 @@ const Home = (props) => {
     return (
         <div className={style.flexContainer}>
             <div className={style.homeContent} style={{backgroundColor: palette.neutralLighter}}>
-                <img src={require('../res/record4.jpg')} alt=""/>
+                <div className={style.placeholder}>
+                    <img src={require('../res/record4.jpg')} alt=""/>
+                </div>
 
                 <div className={style.heading}>
                     <h3>One platform. All your medical history, securely accessible from everywhere</h3>

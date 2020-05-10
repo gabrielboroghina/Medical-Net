@@ -76,7 +76,10 @@ const EditBox = props => {
         <div className="slideLeft">
             <div className={style.leftRight}>
                 <IconButton iconProps={{iconName: "ChromeBack"}} title="Back" ariaLabel="Back"
-                            onClick={() => props.doneCallback(false)}
+                            onClick={() => {
+                                setSendingError(null);
+                                props.doneCallback(false);
+                            }}
                             style={{float: "left"}}
                 />
                 <div style={{float: "right"}}>

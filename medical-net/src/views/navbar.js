@@ -76,50 +76,31 @@ const Navbar = props => {
             {
                 key: 'link0',
                 text: 'Home',
-                onClick: () => {
-                    history.push('/')
-                }
+                onClick: () => history.push('/')
             },
+            ...(props.user ? [{
+                key: 'link2',
+                text: 'Doctors',
+                onClick: () => history.push('/doctors')
+            }] : []),
+            ...(props.user && [2, 3].includes(props.user.role_id) ? [{
+                key: 'link3',
+                text: 'Medical Records',
+                onClick: () => history.push('/medical-records')
+            }] : []),
             {
                 key: 'link1',
                 text: 'FAQ',
-                onClick: () => {
-                    history.push('/faq')
-                }
+                onClick: () => history.push('/faq')
             },
+            ...(props.user && [0, 1].includes(props.user.role_id) ? [{
+                key: 'link4',
+                text: 'Dashboard',
+                onClick: () => history.push('/support-dashboard')
+            }] : []),
         ],
         directionalHintFixed: true,
     };
-
-    if (props.user)
-        menuProps.items = [
-            ...menuProps.items,
-            {
-                key: 'link2',
-                text: 'Doctors',
-                onClick: () => {
-                    history.push('/doctors')
-                }
-            },
-            {
-                key: 'link3',
-                text: 'Medical Records',
-                onClick: () => {
-                    history.push('/medical-records')
-                }
-            }
-        ];
-    if (props.user && [0, 1].includes(props.user.role_id))
-        menuProps.items = [
-            ...menuProps.items,
-            {
-                key: 'link4',
-                text: 'Dashboard',
-                onClick: () => {
-                    history.push('/support-dashboard')
-                }
-            },
-        ];
 
     return (
         <div className={style.nav} style={{boxShadow: Depths.depth16}}>

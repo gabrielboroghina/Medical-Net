@@ -12,7 +12,7 @@ const getAll = (onlyResolved) => {
     `;
     if (onlyResolved)
         query += `
-            where response is not null and important = true
+            where response is not null and response != '' and important = true
         `;
     return executeQuery(query);
 };
@@ -41,7 +41,15 @@ const insertMessage = (data) => {
     return executeQuery(query, [data.subject, data.message, data.author]);
 };
 
-const updateMessage = (msgId, newProps) => {
+const updateMessage = async (msgId, newProps) => {
+    // retrieve the old message details
+    let query = `
+        select *
+        from messages
+        where id = $1
+    `;
+    const oldMessage = (await executeQuery(query, [msgId]))[0];
+
     const setProps = [];
     if (newProps.response !== undefined)
         setProps.push('response');
@@ -51,12 +59,14 @@ const updateMessage = (msgId, newProps) => {
     if (!setProps)
         return;
 
-    const query = `
+    query = `
         update messages
         set ${setProps.map((prop, idx) => `${prop} = $${idx + 2}`).join(',')}
         where id = $1
     `;
-    return executeQuery(query, [msgId, ...setProps.map(prop => newProps[prop])]);
+    await executeQuery(query, [msgId, ...setProps.map(prop => newProps[prop])]);
+
+    return oldMessage;
 };
 
 const deliverMessageResponse = async (messageId) => {
