@@ -1,5 +1,4 @@
 import * as React from 'react';
-import '../App.scss';
 import style from '../style.module.scss';
 import {Link, useHistory} from 'react-router-dom';
 

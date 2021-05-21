@@ -7,9 +7,9 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@uifabric/react-hooks": "latest",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
-    "node-sass": "^4.13.1",
+    "node-sass": "4.14.1",
     "office-ui-fabric-core": "^11.0.0",
     "office-ui-fabric-react": "^7.102.0",
     "react": "^16.13.0",
@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@uifabric/example-data": "^7.0.6",
-    "@uifabric/fluent-theme": "^7.1.51"
+    "@uifabric/fluent-theme": "^7.1.51",
+    "sass-loader": "^11.1.1"
   }
 }

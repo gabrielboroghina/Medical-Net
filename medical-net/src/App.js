@@ -13,7 +13,6 @@ import NotFound from "./views/not-found";
 import MessagesManagementBoard from "./views/support-dashboard";
 import Home from "./views/home";
 import MedicalRecords from "./views/medical-records";
-import './App.scss';
 
 const customTheme = createTheme({
     palette: {
