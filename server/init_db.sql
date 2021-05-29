@@ -100,7 +100,7 @@ insert into users(username, password, email, name, role_id, email_verification_t
 values ('admin', '$2a$05$syuu4EhTXSc1C/cx.UWfD.jThhANP6ZsAnTeiCaAHy190TYUyk/E.', null, 'Administrator', 0, null); -- pass: administrator
 
 insert into users(username, password, email, name, role_id, email_verification_token)
-values ('tech', '$2a$05$59lSLlwhHq5RUjAxtLJ9o.oDViE9riaE4fqBWE2gbe5DIaaIxFYNm', null, 'Tech Support', 1, null); -- pass:
+values ('tech', '$2a$05$59lSLlwhHq5RUjAxtLJ9o.oDViE9riaE4fqBWE2gbe5DIaaIxFYNm', null, 'Tech Support', 1, null); -- pass: support
 
 insert into users(username, password, email, name, role_id, email_verification_token)
 values ('patient', '$2a$05$FT1aRjeXyHtX5UGen1rKjuL66Pf3lUHlr443gohRYDGFr2YDrhhVi', 'john.doe@medicalnet.com', 'John Doe', 2, null); -- pass: patient

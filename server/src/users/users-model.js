@@ -6,9 +6,7 @@ const {Mailer} = require('../utils/mailer');
 const randtoken = require('rand-token');
 const {UserRoles, hashPassword, validatePassword} = require('./authorization');
 
-
 const mailer = new Mailer();
-mailer.init();
 
 const addUser = async (username, password, email, name) => {
     const roleId = UserRoles.NORMAL_USER;

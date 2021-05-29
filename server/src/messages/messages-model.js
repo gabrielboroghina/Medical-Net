@@ -3,7 +3,6 @@ const {Mailer} = require('../utils/mailer');
 const {getUserProfile} = require('../users/users-model');
 
 const mailer = new Mailer();
-const mailerInitPromise = mailer.init();
 
 const getAll = (onlyResolved) => {
     let query = `
@@ -86,7 +85,6 @@ const deliverMessageResponse = async (messageId) => {
         <p>We hope the answer will clarify your question!<br/>Have a good day!</p>
     `;
 
-    await mailerInitPromise;
     return mailer.sendMail(userProfile.email, mailSubject, mailBody);
 };
 
