@@ -1,5 +1,5 @@
 export const strings = {
     appName: "Medical.Net",
-    mail: "gabrielboroghina@outlook.com",
-    phone: "+40747368321"
+    mail: "md.medical.net@gmail.com",
+    phone: "+40700123456"
 };

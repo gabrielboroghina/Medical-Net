@@ -48,6 +48,7 @@ router.get('/verify', async (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
+    console.warn("Login request");
     const {username, password} = req.body;
 
     try {

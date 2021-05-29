@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-boilerplate",
+  "name": "medical-net",
   "version": "1.0.0",
-  "description": "Boilerplate for NodeJS based projects",
+  "description": "MedicalNet platform",
   "main": "start.js",
   "scripts": {
     "start-prod": "node start.js",
@@ -12,14 +12,13 @@
     "type": "git",
     "url": "git+https://gitlab.com/codeboilerplates/nodejs.git"
   },
-  "author": "Alexandru Hogea",
+  "author": "Gabriel Boroghina. Mihaela Catrina",
   "license": "ISC",
   "bugs": {
     "url": "https://gitlab.com/codeboilerplates/nodejs/issues"
   },
   "homepage": "https://gitlab.com/codeboilerplates/nodejs#readme",
   "dependencies": {
-    "@sendgrid/mail": "^7.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -29,10 +28,8 @@
     "googleapis": "^49.0.0",
     "helmet": "^3.21.3",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.5.4",
-    "mongoose": "^5.12.10",
     "morgan": "^1.9.1",
-    "pg": "^7.18.2",
+    "postgres-pool": "^5.0.1",
     "rand-token": "^1.0.1",
     "validator": "^12.2.0",
     "winston": "^3.2.1"

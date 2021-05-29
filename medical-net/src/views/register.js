@@ -52,10 +52,35 @@ const EmailConfirm = () => {
 function RegisterBox() {
     const {palette} = getTheme();
     const [err, setErr] = useState({username: "", name: "", email: "", password: ""});
+    const [values, setValues] = useState({username: "", name: "", email: "", password: ""});
     const [registrationState, setRegistrationState] = useState(RegistrationStates.DATA_FORM);
 
     const validatePassword = password => {
-        return password.length >= 6;
+        if (password.length < 6) {
+            return "Password must have at least 6 characters";
+        } else if (password.search(/\d/) === -1) {
+            return "Password must contain at least one digit";
+        } else if (password.search(/[a-zA-Z]/) === -1) {
+            return "Password must contain at least one letter";
+        } else if (password.search(/[^a-zA-Z0-9!@#$%^&*()_+]/) !== -1) {
+            return "Password contains invalid characters";
+        }
+        return null;
+    };
+
+    const areFieldsValid = (data) => {
+        // Validate fields
+        if (!(data.username && data.name && data.email && data.password)) {
+            setErr({password: "Some required fields are empty"});
+            return false;
+        }
+
+        const passError = validatePassword(data.password);
+        if (passError) {
+            setErr({password: passError});
+            return false;
+        }
+        return true;
     };
 
     const registerUser = async () => {
@@ -65,15 +90,9 @@ function RegisterBox() {
             email: document.getElementById("field-email").value,
             password: document.getElementById("field-pass").value,
         };
-        let areFieldsValid = true;
+        setValues(data);
 
-        // Validate fields
-        if (!validatePassword(data.password)) {
-            setErr({pass: "Password must have at least 6 characters"});
-            areFieldsValid = false;
-        }
-
-        if (areFieldsValid) {
+        if (areFieldsValid(data)) {
             // submit registration request to server
             try {
                 await bridge.register(data);
@@ -99,13 +118,17 @@ function RegisterBox() {
 
             <form>
                 <Stack tokens={{childrenGap: 20}}>
-                    <TextField id="field-user" label="Username:" underlined required
+                    <TextField id="field-user" label="Username:" autoFocus
+                               underlined required defaultValue={values.username}
                                autoComplete="username" errorMessage={err.username}/>
-                    <TextField id="field-name" label="Name:" underlined required
+                    <TextField id="field-name" label="Name:"
+                               underlined required defaultValue={values.name}
                                autoComplete="name" errorMessage={err.name}/>
-                    <TextField id="field-email" label="Email:" underlined required
+                    <TextField id="field-email" label="Email:"
+                               underlined required defaultValue={values.email}
                                autocomplete="email" errorMessage={err.email}/>
-                    <TextField id="field-pass" label="Password:" type="password" underlined required
+                    <TextField id="field-pass" label="Password:" type="password"
+                               underlined required defaultValue={values.password}
                                autoComplete="current-password" errorMessage={err.password}/>
 
                     <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>

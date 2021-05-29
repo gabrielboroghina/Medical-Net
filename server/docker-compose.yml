@@ -17,14 +17,14 @@ services:
     environment:
       POSTGRES_USER: dbuser
       POSTGRES_PASSWORD: dbpass
-      POSTGRES_DB: bookstore
+      POSTGRES_DB: medicalnet
       TZ: Europe/Bucharest
       PGTZ: Europe/Bucharest
     ports:
       - "7777:5432"
     volumes:
-      - lab5_pgdb:/var/lib/postgresql/data
+      - medicalnet_db:/var/lib/postgresql/data
       - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
 
 volumes:
-  lab5_pgdb:
+  medicalnet_db:
