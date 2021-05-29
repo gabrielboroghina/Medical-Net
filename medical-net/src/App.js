@@ -3,6 +3,7 @@ import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {RegisterBox, EmailConfirm} from "./views/register";
 import {createTheme, loadTheme} from "office-ui-fabric-react";
 import {useCookies} from 'react-cookie';
+
 import Navbar from "./views/navbar";
 import Doctors from "./views/doctors";
 import Footer from "./views/footer";
@@ -13,6 +14,8 @@ import NotFound from "./views/not-found";
 import MessagesManagementBoard from "./views/support-dashboard";
 import Home from "./views/home";
 import MedicalRecords from "./views/medical-records";
+
+import { withTranslation, Trans } from 'react-i18next';
 
 const customTheme = createTheme({
     palette: {
@@ -99,4 +102,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default withTranslation('translations')(App);

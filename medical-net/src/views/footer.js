@@ -3,9 +3,11 @@ import style from '../style.module.scss';
 import {getTheme} from "office-ui-fabric-react/lib/Styling";
 import {strings} from '../strings';
 import {Link} from "office-ui-fabric-react";
+import {withTranslation} from "react-i18next";
 
 
-const Footer = () => {
+const Footer = props => {
+    const {t} = props;
     const {palette} = getTheme();
 
     return (
@@ -14,7 +16,7 @@ const Footer = () => {
                 <div className={style.column}>
                     <h3>{strings.appName}</h3>
                     <p>
-                        Copyright &copy; {new Date().getFullYear()} {strings.appName}. All rights reserved.
+                        Copyright &copy; {new Date().getFullYear()} {strings.appName}. {t('footer.rights_reserved')}
                     </p>
                 </div>
                 <div className={style.column}>
@@ -30,4 +32,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default withTranslation('translations')(Footer);

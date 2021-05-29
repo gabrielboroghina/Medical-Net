@@ -1,6 +1,7 @@
 import * as React from 'react';
 import style from '../style.module.scss';
 import {Link, useHistory} from 'react-router-dom';
+import Flag from "react-world-flags";
 
 import {
     Stack, Text,
@@ -9,13 +10,21 @@ import {
 } from 'office-ui-fabric-react';
 import {Depths} from '@uifabric/fluent-theme/lib/fluent/FluentDepths';
 import {useCookies} from "react-cookie";
+import {withTranslation} from "react-i18next";
 
 
 initializeIcons();
 
 const Navbar = props => {
+    const {t} = props;
     const [, , removeCookie] = useCookies(['user_profile']);
+    const [cookies, setCookie,] = useCookies(['locale']);
+    let locale = cookies['locale'];
     const history = useHistory();
+
+    if (!locale) {
+        setCookie("locale", "en");
+    }
 
     const signOut = () => {
         removeCookie('access_token');
@@ -47,7 +56,7 @@ const Navbar = props => {
                     color: 'salmon',
                 },
             },
-            text: 'Sign out',
+            text: t('sign_out'),
             onClick: signOut
         },
     ];
@@ -74,12 +83,12 @@ const Navbar = props => {
         items: [
             {
                 key: 'link0',
-                text: 'Home',
+                text: t('nav.home'),
                 onClick: () => history.push('/')
             },
             ...(props.user ? [{
                 key: 'link2',
-                text: 'Doctors',
+                text: t('nav.doctors'),
                 onClick: () => history.push('/doctors')
             }] : []),
             ...(props.user && [2, 3].includes(props.user.role_id) ? [{
@@ -101,6 +110,14 @@ const Navbar = props => {
         directionalHintFixed: true,
     };
 
+    const switchLang = () => {
+        const {i18n} = props;
+        const newLocale = locale === "en" ? "ro" : "en";
+
+        i18n.changeLanguage(newLocale);
+        setCookie('locale', newLocale);
+    }
+
     return (
         <div className={style.nav} style={{boxShadow: Depths.depth16}}>
             <IconButton className={style.hamburgerMenu}
@@ -117,32 +134,35 @@ const Navbar = props => {
             <Stack className={style.navMenu} horizontal tokens={{childrenGap: 20}}>
                 <div className={style.verticalSeparator}/>
                 <Link className={style.link} to={"/"}>
-                    <Text variant={"mediumPlus"}>Home</Text>
+                    <Text variant={"mediumPlus"}>{t('nav.home')}</Text>
                 </Link>
                 {
                     props.user &&
                     <Link className={style.link} to={"/doctors"}>
-                        <Text variant={"mediumPlus"}>Doctors</Text>
+                        <Text variant={"mediumPlus"}>{t('nav.doctors')}</Text>
                     </Link>
                 }
                 {
                     props.user && [2, 3].includes(props.user.role_id) &&
                     <Link className={style.link} to={"/medical-records"}>
-                        <Text variant={"mediumPlus"}>Medical Records</Text>
+                        <Text variant={"mediumPlus"}>{t('nav.medical_records')}</Text>
                     </Link>
                 }
                 <Link className={style.link} to={"/faq"}>
-                    <Text variant={"mediumPlus"}>FAQ</Text>
+                    <Text variant={"mediumPlus"}>{t('nav.faq')}</Text>
                 </Link>
                 {
                     props.user && [0, 1].includes(props.user.role_id) &&
                     <Link className={style.link} to={"/support-dashboard"}>
-                        <Text variant={"mediumPlus"}>Dashboard</Text>
+                        <Text variant={"mediumPlus"}>{t('nav.dashboard')}</Text>
                     </Link>
                 }
             </Stack>
 
             <Stack className={style.stack} horizontal horizontalAlign="end">
+                <CommandBarButton className={style.flag} onClick={switchLang}>
+                    <Flag code={locale === "en" ? "ro" : "gb"} height="20" width="20"/>
+                </CommandBarButton>
                 {
                     props.user
                         ?
@@ -168,4 +188,4 @@ const Navbar = props => {
     );
 };
 
-export default Navbar;
+export default withTranslation('translations')(Navbar);

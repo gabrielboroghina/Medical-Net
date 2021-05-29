@@ -14,6 +14,7 @@ import {
     MessageBarType,
     getTheme, mergeStyleSets, Separator
 } from 'office-ui-fabric-react';
+import {withTranslation} from "react-i18next";
 
 
 const Faq = (props) => {
@@ -37,9 +38,10 @@ const Faq = (props) => {
     );
 };
 
-export default Faq;
+export default withTranslation('translations')(Faq);
 
-const QuestionForm = () => {
+const QuestionForm = withTranslation('translations')(props => {
+    const {t} = props;
     const [sendingResult, setSendingResult] = useState(null);
 
     const sendQuestion = () => {
@@ -59,10 +61,8 @@ const QuestionForm = () => {
     return (
         <div className={style.questionFormBox}>
             <Stack tokens={{childrenGap: 20}}>
-                <h2>Contact us</h2>
-                <Text variant={"medium"} block>
-                    Send us your questions and we will reply you on the email as soon as possibile.
-                </Text>
+                <h2>{t('faq.contact_us')}</h2>
+                <Text variant={"medium"} block>{t('faq.send_questions')}</Text>
 
                 <form>
                     <Stack tokens={{childrenGap: 20}}>
@@ -89,7 +89,7 @@ const QuestionForm = () => {
             </Stack>
         </div>
     );
-};
+});
 
 const theme = getTheme();
 const headerAndFooterStyles = {
@@ -100,7 +100,8 @@ const classNames = mergeStyleSets({
     header: [headerAndFooterStyles, theme.fonts.xLarge],
 });
 
-const FaqGroupedList = () => {
+const FaqGroupedList = withTranslation('translations')(props => {
+    const {t} = props;
     const [data, setData] = useState({items: [], groups: []});
 
     async function fetchData() {
@@ -149,7 +150,7 @@ const FaqGroupedList = () => {
 
     return (
         <Stack tokens={{childrenGap: 20}}>
-            <h2>Frequently Asked Questions</h2>
+            <h2>{t('faq.faq')}</h2>
 
             <GroupedList items={data.items}
                          onRenderCell={_onRenderCell}
@@ -158,4 +159,4 @@ const FaqGroupedList = () => {
             />
         </Stack>
     );
-};
+});

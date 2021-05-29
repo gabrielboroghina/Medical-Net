@@ -24,6 +24,7 @@ import {
     MessageBarType, MessageBar,
     ComboBox, Label
 } from "office-ui-fabric-react";
+import {withTranslation} from "react-i18next";
 
 
 const {palette} = getTheme();
@@ -244,6 +245,7 @@ const DoctorModal = (props) => {
 };
 
 const Doctors = (props) => {
+    const {t} = props;
     const [[doctors, specialties, hospitals], setItems] = useState([[], [], []]);
     const [newModalOpened, setNewModalOpened] = useState(false);
 
@@ -278,13 +280,13 @@ const Doctors = (props) => {
         ? [
             {
                 key: 'new',
-                text: 'New',
+                text: t('doctors.new'),
                 iconProps: {iconName: 'Add'},
                 onClick: addDoctor
             },
             {
                 key: 'export',
-                text: 'Export',
+                text: t('doctors.export'),
                 iconProps: {iconName: 'Download'},
                 onClick: exportData,
             }
@@ -324,7 +326,7 @@ const Doctors = (props) => {
             ...defaultCmdBarItems,
             {
                 key: 'filter',
-                text: 'Filter',
+                text: t('doctors.filter'),
                 iconProps: {iconName: 'Filter'},
                 subMenuProps: {
                     items: [
@@ -367,4 +369,4 @@ const Doctors = (props) => {
     );
 };
 
-export default Doctors;
+export default withTranslation('translations')(Doctors);

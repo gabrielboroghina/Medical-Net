@@ -6,8 +6,10 @@ import {
 } from 'office-ui-fabric-react';
 import {Depths} from "@uifabric/fluent-theme";
 
+import {withTranslation} from 'react-i18next';
 
 const Home = (props) => {
+    const {t} = props;
     const {palette} = getTheme();
 
     return (
@@ -18,26 +20,20 @@ const Home = (props) => {
                 </div>
 
                 <div className={style.heading}>
-                    <h3>One platform. All your medical history, securely accessible from everywhere</h3>
+                    <h3>{t('home.heading')}</h3>
                 </div>
 
                 <div className={style.row}>
                     <div className={style.col}>
                         <div className={style.card} style={{boxShadow: Depths.depth8}}>
                             <FontIcon iconName="ProfileSearch" className={style.icon}/>
-                            <p>
-                                Find the best doctor to your needs. Explore doctors by specialty or hospital, together
-                                with their ratings
-                            </p>
+                            <p>{t('home.feature1')}</p>
                         </div>
                     </div>
                     <div className={style.col}>
                         <div className={style.card} style={{boxShadow: Depths.depth8}}>
                             <FontIcon iconName="DataConnectionLibrary" className={style.icon}/>
-                            <p>
-                                Store all your medical history in a safe place, accessible only to you and to your
-                                doctors
-                            </p>
+                            <p>{t('home.feature2')}</p>
                         </div>
                     </div>
                 </div>
@@ -46,4 +42,4 @@ const Home = (props) => {
     );
 };
 
-export default Home;
+export default withTranslation('translations')(Home);
