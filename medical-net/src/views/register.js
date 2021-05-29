@@ -21,9 +21,9 @@ const RegistrationStates = Object.freeze({
 const ValidateEmailBox = () => {
     return (
         <>
-            <h2>Email verification</h2>
+            <h2>Pending administrator approval</h2>
             <Text variant={'medium'} block>
-                We've sent you a verification email. Please confirm it to finalize your registration.
+                A registration request was sent to the platform administrator. You will receive a email when your account will be activated.
             </Text>
         </>
     );
@@ -36,12 +36,10 @@ const EmailConfirm = () => {
         <div className={style.flexContainer}>
             <div className={style.box} style={{boxShadow: Depths.depth4}}>
                 <Stack className="slideLeft" tokens={{childrenGap: 20}}>
-                    <h2>Email confirmed</h2>
+                    <h2>Account activated</h2>
                     <Text variant={'medium'} block>
-                        Your account was successfully validated.
+                        The account was successfully activated. A confirmation email was sent to the user.
                     </Text>
-                    <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>Go to login
-                        page</Link>
                     <br/>
                 </Stack>
             </div>

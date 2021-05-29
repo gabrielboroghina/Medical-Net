@@ -15,7 +15,7 @@ const addUser = async (username, password, email, name) => {
     // build the email verification link
     const emailAddressHash = crypto.createHash('md5').update(email).digest('hex');
     const salt = randtoken.generate(16);
-    const verificationToken = `${emailAddressHash}-${salt}`;
+    const verificationToken = `${email}-${emailAddressHash}-${salt}`;
 
     // add the user in the DB together with the email verification token
     const query = `
@@ -34,7 +34,7 @@ const addUser = async (username, password, email, name) => {
         }
     }
 
-    sendValidationEmail(email, verificationToken);
+    sendAdminApprovalEmail(email, username, name, verificationToken);
 };
 
 const authenticate = async (username, password) => {
@@ -63,11 +63,16 @@ const authenticate = async (username, password) => {
     return [user.id, token];
 };
 
-const sendValidationEmail = async (email, verificationToken) => {
-    const verificationLink = `${process.env.HOST}:${process.env.PORT}/api/v1/users/verify?token=${verificationToken}`;
+const sendAdminApprovalEmail = async (email, username, name, verificationToken) => {
+    const verificationLink = `${process.env.HOST}:${process.env.PORT}/api/v1/users/approve?token=${verificationToken}`;
 
-    const mailSubject = "Welcome to Medical.Net! Confirm your email";
-    const mailBody = 'By clicking on the following link, you are confirming your email address.' +
+    const mailSubject = "Registration request";
+    const mailBody =
+        'There is a new registration request to be admin approved for the following user: <br/><br/>' +
+        `<b>Name:</b> ${name} <br/>` +
+        `<b>Username:</b> ${username} <br/>` +
+        `<b>Email:</b> ${email} <br/><br/>` +
+        'After you validate the data, click the link to perform the activation of the account' +
         `<br/><a class="button" href="${verificationLink}" style="
           background-color: #4CAF50;
           border: none;
@@ -78,7 +83,27 @@ const sendValidationEmail = async (email, verificationToken) => {
           text-decoration: none;
           display: inline-block;
           font-size: 16px;
-          ">Confirm Email</a>`;
+          ">Approve registration request</a>`;
+
+    await mailer.sendMail(process.env.EMAIL_SENDER, mailSubject, mailBody);
+};
+
+const sendAccountValidationEmail = async (email) => {
+    const mailSubject = "Account activated";
+    const mailBody =
+        'Welcome to the Medical.Net platform! <br/><br/>' +
+        'Your account was approved and activated by the administrator. You can login into the platform now. <br/>' +
+        `<br/><a class="button" href="${process.env.WEB_HOST}/login" style="
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          margin: 30px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          ">Go to login</a>`;
 
     await mailer.sendMail(email, mailSubject, mailBody);
 };
@@ -135,4 +160,6 @@ module.exports = {
     verifyEmailToken,
     getUserProfile,
     getDoctorGrants,
+    sendAccountValidationEmail,
+    sendAdminApprovalEmail,
 };

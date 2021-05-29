@@ -125,7 +125,7 @@ insert into doctors(name, title, specialty, workplace, description, rating, pict
 values ('Prof. Univ. Dr. Constantin Ciuce', 'Profesor', 1, 3,
         E'Doctor in Medicina, teza de doctorat: “Contributii experimentale si clinice in microchirurgia reconstructiva, UMF “Iuliu Hatieganu“ Cluj-Napoca, conducator stiintific Prof. Dr. Aurel Kaufmann' ||
         E'Profesor universitar - Disciplina Chirurgie I, Universitatea de Medicina si Farmacie “Iuliu Hatieganu” Cluj-Napoca',
-        9.90, 'https://www.reginamaria.ro/sites/default/files/styles/large/public/medic/constantin_ciuce.png?itok=SUXLop9S', 3);
+        9.90, 'https://www.reginamaria.ro/sites/default/files/styles/large/public/medic/constantin_ciuce.png?itok=SUXLop9S', 4);
 
 insert into records(type, investigations, diagnosis, prescription, create_date, doctor, owner_id)
 values (1,

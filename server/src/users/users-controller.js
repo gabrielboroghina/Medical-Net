@@ -37,13 +37,14 @@ router.post('/register', async (req, res, next) => {
     }
 });
 
-router.get('/verify', async (req, res, next) => {
+router.get('/approve', async (req, res, next) => {
     const verificationToken = req.query.token;
     const validated = await usersService.verifyEmailToken(verificationToken);
 
-    if (validated)
+    if (validated) {
+        usersService.sendAccountValidationEmail(verificationToken.split("-")[0]);
         res.redirect(302, `${process.env.WEB_HOST}/emailconfirmed`);
-    else
+    } else
         res.status(404).end();
 });
 

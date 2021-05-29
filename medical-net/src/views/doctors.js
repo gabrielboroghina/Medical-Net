@@ -261,6 +261,19 @@ const Doctors = (props) => {
         setNewModalOpened(true);
     };
 
+    const exportData = async () => {
+        const [doctors, ] = await bridge.getDoctors();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(doctors));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "DoctorsReport.json");
+
+        dlAnchorElem.style.display = 'none';
+        document.body.appendChild(dlAnchorElem);
+        dlAnchorElem.click();
+        document.body.removeChild(dlAnchorElem);
+    }
+
     const defaultCmdBarItems = props.user.role_id === 0
         ? [
             {
@@ -268,6 +281,12 @@ const Doctors = (props) => {
                 text: 'New',
                 iconProps: {iconName: 'Add'},
                 onClick: addDoctor
+            },
+            {
+                key: 'export',
+                text: 'Export',
+                iconProps: {iconName: 'Download'},
+                onClick: exportData,
             }
         ]
         : [];
