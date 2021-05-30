@@ -133,7 +133,7 @@ values (1,
         'Endocardita - inflamația stratului interior al inimii',
         'Administrarea prelungita de agenti antimicrobieni (antibiotice intravenos)',
         now(),
-        3, 2);
+        3, 3);
 
 insert into records(type, investigations, diagnosis, prescription, create_date, doctor, owner_id)
 values (2,
@@ -141,7 +141,7 @@ values (2,
         'Anemie, Hipotiroidism',
         'Fier, Levotiroxina sodica',
         now(),
-        1, 2);
+        1, 3);
 
 insert into messages (subject, message, response, important, create_date)
 values ('How to post a new question?', 'Am I able to ask a question about the platform?', 'Just fill the contact form above with your question in the subject field and optionally a description in the message field and you will receive the response via your e-mail.', true, now());
