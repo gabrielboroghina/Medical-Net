@@ -34,7 +34,45 @@ const addUser = async (username, password, email, name) => {
         }
     }
 
-    sendAdminApprovalEmail(email, username, name, verificationToken);
+    await sendAdminApprovalEmail(email, username, name, verificationToken);
+};
+
+const sendPasswordResetMail = async (username) => {
+    const query = `
+        SELECT u.email
+        FROM users u
+        WHERE u.username = $1
+           or u.email = $1
+    `;
+    const result = await executeQuery(query, [username]);
+    const user = result[0];
+    const email = user.email;
+
+    const emailAddressHash = crypto.createHash('md5').update(email).digest('hex');
+    const salt = randtoken.generate(16);
+    const verificationToken = `${email}-${emailAddressHash}-${salt}`;
+
+    const verificationLink = `${process.env.WEB_HOST}/resetpass?token=${verificationToken}`;
+
+    const mailSubject = "Reset password";
+    const mailBody =
+        'Click the following link to reset your password: <br/><br/>' +
+        `<a href="${verificationLink}">${verificationLink}</a>`;
+
+    await mailer.sendMail(email, mailSubject, mailBody);
+};
+
+const resetPassword = async (token, password) => {
+    const email = token.split("-")[0];
+    console.log("resetting", password, email);
+    const encryptedPassword = await hashPassword(password);
+
+    const query = `
+        UPDATE users
+        SET password = $2
+        WHERE email = $1
+    `;
+    await executeQuery(query, [email, encryptedPassword]);
 };
 
 const authenticate = async (username, password) => {
@@ -162,4 +200,6 @@ module.exports = {
     getDoctorGrants,
     sendAccountValidationEmail,
     sendAdminApprovalEmail,
+    sendPasswordResetMail,
+    resetPassword,
 };

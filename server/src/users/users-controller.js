@@ -49,7 +49,6 @@ router.get('/approve', async (req, res, next) => {
 });
 
 router.post('/login', async (req, res, next) => {
-    console.warn("Login request");
     const {username, password} = req.body;
 
     try {
@@ -68,6 +67,31 @@ router.post('/login', async (req, res, next) => {
             accessToken: token,
             userProfile: userProfile,
         });
+    } catch (err) {
+        // daca primesc eroare, pasez eroarea mai departe la handler-ul de errori declarat ca middleware in start.js
+        next(err);
+    }
+});
+
+router.post('/forgotpass', async (req, res, next) => {
+    const {username} = req.body;
+
+    try {
+        await usersService.sendPasswordResetMail(username);
+
+        res.status(200).end();
+    } catch (err) {
+        // daca primesc eroare, pasez eroarea mai departe la handler-ul de errori declarat ca middleware in start.js
+        next(err);
+    }
+});
+
+router.post('/resetpass', async (req, res, next) => {
+    const {email, password} = req.body;
+
+    try {
+        await usersService.resetPassword(email, password);
+        res.status(200).end();
     } catch (err) {
         // daca primesc eroare, pasez eroarea mai departe la handler-ul de errori declarat ca middleware in start.js
         next(err);

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import '../App.scss';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import * as bridge from "../bridge";
 import style from '../style.module.scss';
 
@@ -23,7 +23,8 @@ const ValidateEmailBox = () => {
         <>
             <h2>Pending administrator approval</h2>
             <Text variant={'medium'} block>
-                A registration request was sent to the platform administrator. You will receive a email when your account will be activated.
+                A registration request was sent to the platform administrator. You will receive a email when your
+                account will be activated.
             </Text>
         </>
     );
@@ -107,40 +108,44 @@ function RegisterBox() {
         }
     };
 
-    const RegisterForm = () => (
-        <>
-            <h2>Register</h2>
-            < Text variant={'smallPlus'} block>
-                Create an account to be able to use the platform
-            </Text>
+    const RegisterForm = () => {
+        const history = useHistory();
 
-            <form>
-                <Stack tokens={{childrenGap: 20}}>
-                    <TextField id="field-user" label="Username:" autoFocus
-                               underlined required defaultValue={values.username}
-                               autoComplete="username" errorMessage={err.username}/>
-                    <TextField id="field-name" label="Name:"
-                               underlined required defaultValue={values.name}
-                               autoComplete="name" errorMessage={err.name}/>
-                    <TextField id="field-email" label="Email:"
-                               underlined required defaultValue={values.email}
-                               autocomplete="email" errorMessage={err.email}/>
-                    <TextField id="field-pass" label="Password:" type="password"
-                               underlined required defaultValue={values.password}
-                               autoComplete="current-password" errorMessage={err.password}/>
+        return (
+            <>
+                <h2>Register</h2>
+                < Text variant={'smallPlus'} block>
+                    Create an account to be able to use the platform
+                </Text>
 
-                    <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>
-                        Already have an account? Log In
-                    </Link>
+                <form>
+                    <Stack tokens={{childrenGap: 20}}>
+                        <TextField id="field-user" label="Username:" autoFocus
+                                   underlined required defaultValue={values.username}
+                                   autoComplete="username" errorMessage={err.username}/>
+                        <TextField id="field-name" label="Name:"
+                                   underlined required defaultValue={values.name}
+                                   autoComplete="name" errorMessage={err.name}/>
+                        <TextField id="field-email" label="Email:"
+                                   underlined required defaultValue={values.email}
+                                   autocomplete="email" errorMessage={err.email}/>
+                        <TextField id="field-pass" label="Password:" type="password"
+                                   underlined required defaultValue={values.password}
+                                   autoComplete="current-password" errorMessage={err.password}/>
 
-                    <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
-                        <DefaultButton text="Back" allowDisabledFocus/>
-                        <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
+                        <Link className={style.smallLink} to="/login" style={{color: palette.themePrimary}}>
+                            Already have an account? Log In
+                        </Link>
+
+                        <Stack horizontal horizontalAlign="end" tokens={{childrenGap: 20}}>
+                            <DefaultButton text="Back" onClick={() => history.push('/login')} allowDisabledFocus/>
+                            <PrimaryButton text="Register" onClick={registerUser} allowDisabledFocus/>
+                        </Stack>
                     </Stack>
-                </Stack>
-            </form>
-        </>
-    );
+                </form>
+            </>
+        );
+    }
 
     return (
         <div className={style.flexContainer}>

@@ -15,7 +15,8 @@ import MessagesManagementBoard from "./views/support-dashboard";
 import Home from "./views/home";
 import MedicalRecords from "./views/medical-records";
 
-import { withTranslation, Trans } from 'react-i18next';
+import {withTranslation, Trans} from 'react-i18next';
+import ResetPassPanel from "./views/resetpass";
 
 const customTheme = createTheme({
     palette: {
@@ -79,6 +80,7 @@ const App = () => {
             <Switch>
                 <Route path="/not-found" component={NotFound}/>
                 <Route path="/login" component={LoginPanel}/>
+                <Route path="/resetpass" component={ResetPassPanel}/>
                 <Route path="/register" component={RegisterBox}/>
                 <Route path="/emailconfirmed" component={EmailConfirm}/>
                 <ProtectedRoute path="/doctors" allowedRoles={[0, 1, 2, 3]}>

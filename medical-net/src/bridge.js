@@ -30,6 +30,27 @@ export async function login(data) {
     );
 }
 
+export async function forgotPassword(data) {
+    return axios.post(
+        `${config.apiUrl}/users/forgotpass`,
+        data,
+        {
+            headers: {'Content-Type': 'application/json'},
+        }
+    );
+}
+
+export async function resetPassword(data) {
+    return axios.post(
+        `${config.apiUrl}/users/resetpass`,
+        data,
+        {
+            headers: {'Content-Type': 'application/json'},
+        }
+    );
+}
+
+
 export async function getMessages() {
     const token = getToken();
 
